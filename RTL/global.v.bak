@@ -1,0 +1,12 @@
+// This file contains gloabl parameters
+
+`ifndef _GLOBAL_PARA_V
+`define _GLOBAL_PARA_V
+
+`define DATA_SIZE 			128 
+`define HEADER_SIZE 			24
+`define CHANNEL_SIZE 		DATA_SIZE+HEADER_SIZE 				
+
+
+
+`endif

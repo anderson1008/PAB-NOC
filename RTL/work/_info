@@ -1,0 +1,643 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dc:/mentorgraphics/PE10.4/examples
+varbiter
+Z0 !s110 1423512248
+!i10b 1
+!s100 Q6Q2j[n2RcMckLi3ZWW1:2
+IO?X3EP7RBJ]VmHCOz?]VW1
+Z1 VDg1SIo80bB@j0V0VzS_@n1
+Z2 dC:/Anderson/GoogleDrive/TOPAZ/RTL
+w1423459431
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/arbiter.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/arbiter.v
+L0 5
+Z3 OP;L;10.4;61
+r1
+!s85 0
+31
+!s108 1423512248.270000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/arbiter.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/arbiter.v|
+!s101 -O0
+!i113 1
+Z4 o-work work -L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact -O0
+vCHIPPERTop
+Z5 !s110 1423511770
+!i10b 1
+!s100 WjH;2fj2bH0oF8j9>W1I;0
+I2Z9j^RIJ:cQz0Edcdh;l?3
+R1
+R2
+w1423508852
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/CHIPPERRouterTop.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/CHIPPERRouterTop.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1423511770.698000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/CHIPPERRouterTop.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/CHIPPERRouterTop.v|
+!s101 -O0
+!i113 1
+R4
+n@c@h@i@p@p@e@r@top
+vdataChannel
+R0
+!i10b 1
+!s100 EQkHK[GGW`eQ=@mAi4aQO1
+Ib:a2WObI_fN5GK`AU66dD0
+R1
+R2
+w1423511757
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/dataChannel.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/dataChannel.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1423512248.470000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/dataChannel.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/dataChannel.v|
+!s101 -O0
+!i113 1
+R4
+ndata@channel
+vdemux1to2InRouter
+R0
+!i10b 1
+!s100 54YEUPbb`[Ui1`3oXdS;@2
+Io>?noW`5o=G?o2@YeS:Xo3
+R1
+R2
+Z6 w1423088430
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/demux1to2InRouter.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/demux1to2InRouter.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1423512248.916000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/demux1to2InRouter.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/demux1to2InRouter.v|
+!s101 -O0
+!i113 1
+R4
+ndemux1to2@in@router
+vdemux1to2PermNetwk
+Z7 !s110 1422894696
+!i10b 1
+!s100 EdG5ihMH@:DfATnST`8J;0
+IGFE6Z=>BTPijz_FbSALe21
+R1
+R2
+w1422550881
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/demux1to2PermNetwk.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/demux1to2PermNetwk.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1422894696.162000
+!s107 global.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/demux1to2PermNetwk.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/demux1to2PermNetwk.v|
+!s101 -O0
+!i113 1
+R4
+ndemux1to2@perm@netwk
+vdemux2to1
+R0
+!i10b 1
+!s100 <g;6CDK?PR_ge3jH2jHUU0
+I@JH8cc4jha3HNQRINo;0V1
+R1
+R2
+w1422553460
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/demux1to2.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/demux1to2.v
+L0 3
+R3
+r1
+!s85 0
+31
+!s108 1423512248.743000
+!s107 C:/Anderson/GoogleDrive/TOPAZ/RTL/demux1to2.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/demux1to2.v|
+!s101 -O0
+!i113 1
+R4
+vDFF
+Z8 !s110 1423512249
+!i10b 1
+!s100 <MD:D0jdXdjb<;Zk[1S6z2
+I=IgJ7SWQ^V=DZ4ihTfdch3
+R1
+R2
+Z9 w1423459438
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/dff.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/dff.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1423512249.183000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/dff.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/dff.v|
+!s101 -O0
+!i113 1
+R4
+n@d@f@f
+vejectKill
+R8
+!i10b 1
+!s100 ^4aOXiF9D74ekOi2dNVn_0
+IEKf1U_74gLC^4lC3:[WcT2
+R1
+R2
+R6
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/ejectKill.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/ejectKill.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1423512249.343000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/ejectKill.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/ejectKill.v|
+!s101 -O0
+!i113 1
+R4
+neject@kill
+vejector
+R8
+!i10b 1
+!s100 ZmG7VABko;coWnPN=iKA03
+IY12P39A`bT9LMB8Z==Qcm3
+R1
+R2
+R9
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/ejector.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/ejector.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1423512249.528000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/ejector.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/ejector.v|
+!s101 -O0
+!i113 1
+R4
+vejectTree
+R8
+!i10b 1
+!s100 dNS^b@fzIbHH6MI6Xzi^42
+IRYf?:nnU?h`LleBU2T[020
+R1
+R2
+R6
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/ejectTree.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/ejectTree.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1423512249.693000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/ejectTree.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/ejectTree.v|
+!s101 -O0
+!i113 1
+R4
+neject@tree
+vfsmPG
+R8
+!i10b 1
+!s100 >=l8I_m3^5><:f5]MCZ711
+IlmXhb1J0OzGDh316D>E3c0
+R1
+R2
+Z10 w1423459439
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/fsmPG.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/fsmPG.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1423512249.859000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/fsmPG.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/fsmPG.v|
+!s101 -O0
+!i113 1
+R4
+nfsm@p@g
+vgoldenCheck
+Z11 !s110 1423512250
+!i10b 1
+!s100 _dUHW09><gfNOdoT1Z1RI1
+I@^JEFz8cI33>LVHa90HeU2
+R1
+R2
+R10
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/goldenCheck.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/goldenCheck.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1423512250.164000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/goldenCheck.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/goldenCheck.v|
+!s101 -O0
+!i113 1
+R4
+ngolden@check
+vgoldenCounter
+R11
+!i10b 1
+!s100 MZhm_UMG3[iE4an8I5flV2
+IFl<13RIFGA9S1R7iSFOXA1
+R1
+R2
+R6
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/goldenCounter.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/goldenCounter.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1423512250.329000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/goldenCounter.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/goldenCounter.v|
+!s101 -O0
+!i113 1
+R4
+ngolden@counter
+vinjectArb
+R11
+!i10b 1
+!s100 z=iEK7[NkYF9@RcEmS;CH1
+I??NfHRm1b:SW>_HC9i;G>0
+R1
+R2
+R6
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/injectArb.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/injectArb.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1423512250.547000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/injectArb.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/injectArb.v|
+!s101 -O0
+!i113 1
+R4
+ninject@arb
+vloadTrack
+Z12 !s110 1423512251
+!i10b 1
+!s100 TkhF]ESd0ZDY][WJcN6VS2
+I3f`h^hINYJ<QGODJEIH`h1
+R1
+R2
+R10
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/loadTrack.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/loadTrack.v
+L0 6
+R3
+r1
+!s85 0
+31
+!s108 1423512251.008000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/loadTrack.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/loadTrack.v|
+!s101 -O0
+!i113 1
+R4
+nload@track
+vmux2to1
+R12
+!i10b 1
+!s100 9Yh`GKX2QLgz?Ve0ZT@Y62
+IA8`;O:CeVcLNL?SRNLeGH2
+R1
+R2
+w1422553441
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/mux2to1.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/mux2to1.v
+L0 3
+R3
+r1
+!s85 0
+31
+!s108 1423512251.178000
+!s107 C:/Anderson/GoogleDrive/TOPAZ/RTL/mux2to1.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/mux2to1.v|
+!s101 -O0
+!i113 1
+R4
+vmux2to1Inject
+!s110 1422894697
+!i10b 1
+!s100 1F<:kl6mnIJJbE;^RIz?[2
+Ia9j>Cna<Y8ZODGT<81;SK3
+R1
+R2
+w1422891971
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/mux2to1Inject.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/mux2to1Inject.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1422894697.418000
+!s107 global.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/mux2to1Inject.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/mux2to1Inject.v|
+!s101 -O0
+!i113 1
+R4
+nmux2to1@inject
+vmux2to1InRouter
+R12
+!i10b 1
+!s100 bQ;T4?OQhVE[nKicEA5e;0
+IFL]44L3;jOT>2foTcSIUJ2
+R1
+R2
+R6
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/mux2to1InRouter.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/mux2to1InRouter.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1423512251.420000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/mux2to1InRouter.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/mux2to1InRouter.v|
+!s101 -O0
+!i113 1
+R4
+nmux2to1@in@router
+vmux2to1PermNetwk
+R7
+!i10b 1
+!s100 RcockUjBeDC`QJ4nO`MIF3
+I>Yg_7W1X>WO<<B2CTiSbo3
+R1
+R2
+w1422553558
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/mux2to1PermNetwk.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/mux2to1PermNetwk.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1422894696.818000
+!s107 global.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/mux2to1PermNetwk.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/mux2to1PermNetwk.v|
+!s101 -O0
+!i113 1
+R4
+nmux2to1@perm@netwk
+vpermutationNetwork
+R12
+!i10b 1
+!s100 bj=zBQ9bS_8YcKTzZmKC02
+IbSQaj@_4ID=Xmn^JUoRWn3
+R1
+R2
+R6
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/permutationNetwork.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/permutationNetwork.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1423512251.614000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/permutationNetwork.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/permutationNetwork.v|
+!s101 -O0
+!i113 1
+R4
+npermutation@network
+vpermuterBlock
+R12
+!i10b 1
+!s100 >id<1VhMZ9N9NCkT9Z[771
+I[0hJ1@zWS7dN<ZU5UJaGB2
+R1
+R2
+R10
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/permuterBlock.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/permuterBlock.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1423512251.848000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/permuterBlock.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/permuterBlock.v|
+!s101 -O0
+!i113 1
+R4
+npermuter@block
+vpermuterChannel
+!s110 1422894695
+!i10b 1
+!s100 KD1dZ;c4Vicb=En;9A2lE0
+I=nPmbIM`?ZCP?X=[gF>1L0
+R1
+R2
+w1422553926
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/permuterChannel.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/permuterChannel.v
+L0 6
+R3
+r1
+!s85 0
+31
+!s108 1422894695.822000
+!s107 global.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/permuterChannel.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/permuterChannel.v|
+!s101 -O0
+!i113 1
+R4
+npermuter@channel
+vpgCounter
+Z13 !s110 1423512252
+!i10b 1
+!s100 D6C7Y5hbYU0?Za9VDUW432
+ITINQ@A5]0R9TB_<nFo0z01
+R1
+R2
+R10
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/pgCounter.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/pgCounter.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1423512252.053000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/pgCounter.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/pgCounter.v|
+!s101 -O0
+!i113 1
+R4
+npg@counter
+vportPGLevel
+R13
+!i10b 1
+!s100 ^lhm06Q]<SIMR]1mQKOee2
+I67e9]GY^YoLCAT;d:E71N3
+R1
+R2
+R6
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/portPGLevel.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/portPGLevel.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1423512252.263000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/portPGLevel.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/portPGLevel.v|
+!s101 -O0
+!i113 1
+R4
+nport@p@g@level
+vrouterComputation
+R13
+!i10b 1
+!s100 Jk:I]n:ccj2>i<oCAWbS82
+IR<NJ3G5`@HoMWIck86UmJ2
+R1
+R2
+R10
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/routeComputation.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/routeComputation.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1423512252.473000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/routeComputation.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/routeComputation.v|
+!s101 -O0
+!i113 1
+R4
+nrouter@computation
+vsteer
+R13
+!i10b 1
+!s100 z<RQ1A6=iU7@6E;moelVh2
+Iko^<DZYb:;DDVfig_41[g0
+R1
+R2
+R10
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/steer.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/steer.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1423512252.635000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/steer.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/steer.v|
+!s101 -O0
+!i113 1
+R4
+vtb_CHIPPERRouterTop
+R5
+!i10b 1
+!s100 ZzBPDOYQHjD_XiX8<94M72
+IH8<?KRJRI[QZkeXN33[gm2
+R1
+R2
+R6
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/tb_CHIPPERRouterTop.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/tb_CHIPPERRouterTop.v
+L0 4
+R3
+r1
+!s85 0
+31
+!s108 1423511770.223000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/tb_CHIPPERRouterTop.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/tb_CHIPPERRouterTop.v|
+!s101 -O0
+!i113 1
+R4
+ntb_@c@h@i@p@p@e@r@router@top
+vtb_Top
+!s110 1423512321
+!i10b 1
+!s100 9b1>K802bU0FzPUDT5Nza1
+IAoT1EzdZB_4Q:QN?2GX9]2
+R1
+R2
+w1423512304
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/tb_Top.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/tb_Top.v
+L0 4
+R3
+r1
+!s85 0
+31
+!s108 1423512321.452000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/tb_Top.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/tb_Top.v|
+!s101 -O0
+!i113 1
+R4
+ntb_@top
+vTop
+R13
+!i10b 1
+!s100 bzl[jjFafmVBmH1RIhBoc2
+IV^WY^;a7[a3c71K<:Fg0Y1
+R1
+R2
+w1423512000
+8C:/Anderson/GoogleDrive/TOPAZ/RTL/Top.v
+FC:/Anderson/GoogleDrive/TOPAZ/RTL/Top.v
+L0 5
+R3
+r1
+!s85 0
+31
+!s108 1423512252.820000
+!s107 globalVariable.v|C:/Anderson/GoogleDrive/TOPAZ/RTL/Top.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Anderson/GoogleDrive/TOPAZ/RTL/Top.v|
+!s101 -O0
+!i113 1
+R4
+n@top
