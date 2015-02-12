@@ -1,0 +1,98 @@
+******************* NET CONFIGURATION *********************
+ Network        : Torus(4,4,1)
+ Buffer control : NIL
+ Routing control: TORUS-BLESS
+ Started at     : Mon Nov 24 15:50:45 2014
+ Ended at       : Mon Nov 24 15:50:45 2014
+***********************************************************
+ Simulation time         = 00:04:25 (265 secs)
+ Memory Footprint        = 322.129 MBytes)
+ Traffic Pattern         =  Random
+ Seed                    = 113
+ Cycles simulated        = 7815043
+ Cycles deprecated       = 0
+ Buffers size            = 1
+ Messages length         = 1 packet(s)
+ Packets length          = 5 flits
+************************ PERFORMANCE ***********************
+ Supply Thr. Norm        = 0.39987 flits/cycle/router
+ Accept Thr. Norm        = 0.39987 f/c/r (m: 0.399158, M:0.400597)
+ Supply Thr.             = 6.39792 f/c
+ Throughput              = 6.39792 f/c (m: 6.38653, M:6.40956)
+ Average Distance        = 7.53105
+ Messages generated      = 10000000
+ Messages received       = 10000000
+ Messages to inject      = 0
+ Messages on Escape      = 0
+ Total message latency   = 22.2131
+ Network message latency = 19.7732
+ Buffer message latency  = 2.43992
+ Maximum message latency = 171
+ Last Message cycle      = 7815042
+***********************************************************
+
+****************** VIRTUAL NETWORK 1 *********************
+Average_distance_vn_1        = 7.5313
+Messages_generated_vn_1      = 2501346
+Messages_received_vn_1       = 2501346
+Total_message_latency_vn_1   = 22.2126
+Network_message_latency_vn_1 = 19.7732
+Buffer_message_latency_vn_1  = 2.43932
+Maximin_message_latency_vn_1 = 158
+**********************************************************
+
+****************** VIRTUAL NETWORK 2 *********************
+Average_distance_vn_2        = 7.52952
+Messages_generated_vn_2      = 2499103
+Messages_received_vn_2       = 2499103
+Total_message_latency_vn_2   = 22.21
+Network_message_latency_vn_2 = 19.7696
+Buffer_message_latency_vn_2  = 2.44038
+Maximin_message_latency_vn_2 = 141
+**********************************************************
+
+****************** VIRTUAL NETWORK 3 *********************
+Average_distance_vn_3        = 7.53369
+Messages_generated_vn_3      = 2499475
+Messages_received_vn_3       = 2499475
+Total_message_latency_vn_3   = 22.2196
+Network_message_latency_vn_3 = 19.7775
+Buffer_message_latency_vn_3  = 2.44216
+Maximin_message_latency_vn_3 = 167
+**********************************************************
+
+****************** VIRTUAL NETWORK 4 *********************
+Average_distance_vn_4        = 7.52967
+Messages_generated_vn_4      = 2500076
+Messages_received_vn_4       = 2500076
+Total_message_latency_vn_4   = 22.2103
+Network_message_latency_vn_4 = 19.7725
+Buffer_message_latency_vn_4  = 2.43784
+Maximin_message_latency_vn_4 = 171
+**********************************************************
+
+******************* INJECION MAP (flits/cycle) ***********
+
+************************** Z=0 **************************
+0.399982        0.399545        0.39956 0.400344
+0.399869        0.399342        0.400155        0.400045
+0.400123        0.399521        0.400091        0.399158
+0.400597        0.399236        0.399785        0.400563
+
+
+****************** CONSUMPTION MAP (flits/cycle) ********
+
+************************** Z=0 **************************
+0.399813        0.400431        0.399458        0.399677
+0.398879        0.399952        0.398867        0.400045
+0.399372        0.400256        0.399793        0.400855
+0.400485        0.400189        0.399785        0.40006
+
+
+****************** LINK USAGE MAP (%) *******************
+
+************************** Z=0 **************************
+0.40461   0.401822   0.421108   0.423344
+0.404478   0.401701   0.421044   0.423098
+0.404331   0.401546   0.420944   0.42294
+0.404636   0.401855   0.421146   0.423373
