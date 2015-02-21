@@ -1048,27 +1048,40 @@ bool TPZSimpleRouterFlowBless :: permuterBlock (TPZMessage * msg0, TPZMessage * 
    // No msg arrives
    if (msg0==0 && msg1==0)
       return false;
+   
 
    // swap[i] = 1 if any one of the associated inPort or outPort is power-gated.
    if (stage == 1 && pos == 1)
    {
       if (m_portState[4] == INACTIVE || m_portState[2] == INACTIVE)
          return false;
+      else if (m_portState[1] == INACTIVE || m_portState[3] == INACTIVE)
+         if (msg0!=0 && msg1!=0)
+            return true;
    }
    else if (stage == 1 && pos == 2)
    {
       if (m_portState[3] == INACTIVE || m_portState[1] == INACTIVE)
          return false;
+      else if (m_portState[2] == INACTIVE || m_portState[4] == INACTIVE)
+         if (msg0!=0 && msg1!=0)
+            return true;   
    }
    else if (stage == 2 && pos == 1)
    {
       if (m_portState[4] == INACTIVE || m_portState[3] == INACTIVE)
          return false;
+      else if (m_portState[1] == INACTIVE || m_portState[2] == INACTIVE)
+         if (msg0!=0 && msg1!=0)
+            return true;   
    }
    else if (stage == 2 && pos == 2)
    {
       if (m_portState[2] == INACTIVE || m_portState[1] == INACTIVE)
          return false;
+      else if (m_portState[4] == INACTIVE || m_portState[3] == INACTIVE)
+         if (msg0!=0 && msg1!=0)
+            return true;
    }
 
 
