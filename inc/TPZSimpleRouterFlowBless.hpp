@@ -141,9 +141,23 @@
       PORTTYPE getPortType (TPZROUTINGTYPE direction);
       void setPortType (unsigned time);
       unsigned indexMapping (unsigned outIndex);
+      void silverCheck (unsigned time);
+      void setInterval ();
+      void updateHistory (unsigned time);
       //unsigned getPGEpoch () {return EpochPG;}
 
       enum PORTSTATE {INACTIVE=0, ACTIVE, TRANSIENT, WAKEUPTX, WAKEUPRX};
+
+      unsigned EpochPG;
+      unsigned thresholdPG;
+      unsigned thresholdPGWU;
+      unsigned thresholdPGLevel2;
+      unsigned thresholdPGLevel3;
+      unsigned WAKEUPDELAY;
+      unsigned RINGSIZE_PGST1;
+      unsigned RINGSIZE_PGST2;
+      unsigned RINGSIZE_PGST3;
+
 
 		// end of PAB-NOC
 
@@ -190,12 +204,10 @@
       Boolean * m_ACK;
       unsigned m_PGLevel;
       PORTTYPE * m_portType; // port 0 is void. Using port 1-4 in order to conform to TOPOAZ naming routine.
-      unsigned EpochPG;
-      unsigned thresholdPG;
-      unsigned thresholdPGWU;
-      unsigned thresholdPGLevel2;
-      unsigned thresholdPGLevel3;
-      unsigned WAKEUPDELAY;
+      unsigned ** m_historyPktID;
+      unsigned ** m_historyFlitNum;
+      unsigned int ringHopCount;
+      unsigned int updataInterval; // = celling (ringHopCount/3);
       double * m_consecutivePG;
 };
 

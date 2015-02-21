@@ -711,13 +711,14 @@ TPZString TPZSimulation :: writeSimulationStatus()
              TPZString("\n Link Traversal          = ") + TPZString(m_Network->getEventCount( TPZNetwork::LinkTraversal))+
              TPZString("\n DC Sleep                = ") + TPZString(m_Network->getEventCount( TPZNetwork::DCSleepSum))+
              TPZString("\n DC Wakeup               = ") + TPZString(m_Network->getEventCount( TPZNetwork::DCWakeup))+
+             TPZString("\n Silver Count            = ") + TPZString(m_Network->getEventCount( TPZNetwork::Silver))+
 
 	     TPZString("\n\n**********************************************************")+
 	     TPZString("\n");
 
 
              TPZString("***************************  Power  Consumption ******************* \n");
-             double m_goldenCounterDynamicPower = 9.72/5; // in uW / s (10^9 cycles)
+             double m_goldenCounterDynamicPower = 9.72/5; // in uW / ns
              double m_pgCounterDynamicPower = 9.91/5;
              double m_loadTrackDynamicPower = 71.64/5;
              double m_portPGLevelDynamicPower = 15.22/5;
@@ -747,10 +748,10 @@ TPZString TPZSimulation :: writeSimulationStatus()
 
              double m_overallPowerAfterPG = m_overallDynamicPower + m_overallStaticPower - m_savedPower + m_overheadPower;
 
-             double numOFSWTraversalCHIPPER = 866953;
-             double overallPowerCHIPPER = 1033; //W
-             double dynamicPowerCHIPPER = 1033 * 0.51;
-             double staticPowerCHIPPER = 3125 * 0.49;
+             double numOFSWTraversalCHIPPER = 219843;
+             double overallPowerCHIPPER = 644;
+             double dynamicPowerCHIPPER = 644 * 0.21;
+             double staticPowerCHIPPER = 644 * 0.79;
 
              double staticPowerReduced = m_savedPower/1000000/staticPowerCHIPPER * 100;
              double overallPowerSave = (overallPowerCHIPPER - m_overallPowerAfterPG/1000000)/overallPowerCHIPPER * 100;

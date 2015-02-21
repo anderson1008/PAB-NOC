@@ -135,6 +135,7 @@ extern unsigned long maxInject;
 extern unsigned networkSize;
 unsigned routerDelay = 2;
 
+
 //unsigned Epoch = networkSize*routerDelay + networkSize;
 //unsigned Epoch = networkSize*3 + networkSize;
 void TPZSimpleRouterFlowBless :: initialize()
@@ -159,13 +160,20 @@ void TPZSimpleRouterFlowBless :: initialize()
    m_ACK=new Boolean[m_ports+1];
    m_PGLevel = 1;
    m_portType = new PORTTYPE [m_ports];
-   EpochPG = 100;
-   thresholdPG = 15;      // threshold for PG the port
+   EpochPG = 50;
+   thresholdPG = 5;      // threshold for PG the port loadFactorPerPort = 0.3
    thresholdPGWU = 5;
-   thresholdPGLevel2 = 50;   // threshold for change the PG level of the router
-   thresholdPGLevel3 = 30;
+   thresholdPGLevel2 =  thresholdPG*2;   // threshold for change the PG level of the router loadFactorPerRouter = 0.3
+   thresholdPGLevel3 =  thresholdPG;   // loadFactorPerRouter = 0.15
    WAKEUPDELAY = 2;
+   RINGSIZE_PGST1 = 4;
+   RINGSIZE_PGST2 = 8;
+   RINGSIZE_PGST3 = 16;
+   ringHopCount = 0;
+   updataInterval = 0;
    m_consecutivePG = new double [m_ports+1];
+   m_historyPktID = new unsigned * [m_ports+1];
+   m_historyFlitNum = new unsigned * [m_ports+1];
 
    for(int i=0; i<m_ports+1; i++)
    {
@@ -178,7 +186,17 @@ void TPZSimpleRouterFlowBless :: initialize()
       m_WU[i] = false;
       m_ACK[i] = false;
       m_consecutivePG[i] = 0;
-   }
+      // m_historyPktID[i] = 0;
+      // m_historyFlitNum[i] = 0;
+	   m_historyPktID[i] = new unsigned [3];
+	   m_historyFlitNum[i] = new unsigned [3];
+		
+		for (int j=0; j<3; j++) // we only have three buffers to records history headers
+		{
+   	   m_historyPktID[i][j] = 0;
+	      m_historyFlitNum[i][j] = 0;
+		}
+  }
 
    for(int i=0; i<m_ports; i++)
    {
@@ -221,6 +239,8 @@ void TPZSimpleRouterFlowBless :: terminate()
    delete[] m_ACK;
    delete[] m_portType;
    delete[] m_consecutivePG;
+   delete[] m_historyPktID;
+   delete[] m_historyFlitNum;
 }
 
 
@@ -405,6 +425,8 @@ void TPZSimpleRouterFlowBless :: portPowerGate (unsigned time)
       }
    }
 }
+
+
 unsigned TPZSimpleRouterFlowBless :: updatePGLevel ()
 {
    unsigned routerLoad;
@@ -413,19 +435,16 @@ unsigned TPZSimpleRouterFlowBless :: updatePGLevel ()
    {
       m_PGLevel = 3;
       ((TPZNetwork*)(getOwnerRouter().getOwner()))->incrEventCount( TPZNetwork::PGStage3);
-
    }
    else if (routerLoad <= thresholdPGLevel2)
    {
       m_PGLevel = 2;
       ((TPZNetwork*)(getOwnerRouter().getOwner()))->incrEventCount( TPZNetwork::PGStage2);
-
    }
    else
    {
       m_PGLevel = 1;
       ((TPZNetwork*)(getOwnerRouter().getOwner()))->incrEventCount( TPZNetwork::PGStage1);
-
    }
 
    return m_PGLevel;
@@ -502,11 +521,15 @@ Boolean TPZSimpleRouterFlowBless :: inputReading()
 
    unsigned outPort;
    unsigned inPort;
+   unsigned time = getOwnerRouter().getCurrentTime();
 
    //**********************************************************************************************************
    // PART3: Permutation Network
-   //**********************************************************************************************************
-
+   //*********************************************************************************************************
+   setInterval();
+   silverCheck(time);
+   updateHistory(time);
+ 
    bool swapEnable [4] = {};
    cleanOutputInterfaces();
 
@@ -605,10 +628,6 @@ Boolean TPZSimpleRouterFlowBless :: inputReading()
    //**********************************************************************************************************
    // PART1: Compute Delta Info and Set Golden Bit
    //**********************************************************************************************************
-
-   unsigned time = getOwnerRouter().getCurrentTime();
-
-
 
    // Decide the gold packet ID.
    goldenEpochSequencing (time);
@@ -757,6 +776,117 @@ Boolean TPZSimpleRouterFlowBless :: inputReading()
    return true;
 }
 
+void TPZSimpleRouterFlowBless :: silverCheck (unsigned time)
+{
+
+   for (unsigned index = 1; index < m_ports; index++)
+   {
+      if (m_pipeReg1[index]==0)
+      break;
+
+      if (time%ringHopCount == 0)
+      {
+         if (
+               m_historyPktID[index][0] == m_pipeReg1[index] -> getIdentifier() && \
+               m_historyFlitNum[index][0] == m_pipeReg1[index] -> flitNumber()
+             )
+             {
+                m_pipeReg1[index] -> setSilver();
+               ((TPZNetwork*)(getOwnerRouter().getOwner()))->incrEventCount( TPZNetwork::Silver);            
+             }
+         else
+            m_pipeReg1[index] -> clearSilver();
+
+      }
+      else if (time%ringHopCount == updataInterval)
+      {
+         if (
+               m_historyPktID[index][1] == m_pipeReg1[index] -> getIdentifier() && \
+               m_historyFlitNum[index][1] == m_pipeReg1[index] -> flitNumber()
+             )
+             {
+               m_pipeReg1[index] -> setSilver();
+               ((TPZNetwork*)(getOwnerRouter().getOwner()))->incrEventCount( TPZNetwork::Silver);
+             }
+         else
+            m_pipeReg1[index] -> clearSilver();
+      }
+      else if (time%ringHopCount == updataInterval*2)
+      {
+         if (
+               m_historyPktID[index][2] == m_pipeReg1[index] -> getIdentifier() && \
+               m_historyFlitNum[index][2] == m_pipeReg1[index] -> flitNumber()
+             )
+             {
+               m_pipeReg1[index] -> setSilver();
+               ((TPZNetwork*)(getOwnerRouter().getOwner()))->incrEventCount( TPZNetwork::Silver);
+             }
+         else
+            m_pipeReg1[index] -> clearSilver();
+      }
+   }
+}
+
+void TPZSimpleRouterFlowBless :: setInterval ()
+{
+   if (m_PGLevel == 1)
+   {
+      ringHopCount = RINGSIZE_PGST1*2;
+      updataInterval = 3;
+   }
+   else if (m_PGLevel == 2)
+   {
+      ringHopCount = RINGSIZE_PGST2*2;
+      updataInterval = 6;
+   }
+   else if (m_PGLevel == 3)
+   {
+      ringHopCount = RINGSIZE_PGST3*2;
+      updataInterval = 11;
+   }
+}
+
+
+void TPZSimpleRouterFlowBless :: updateHistory (unsigned time)
+{
+   for (unsigned index = 1; index < m_ports; index++)
+   {
+      if (time%ringHopCount == 0)
+      {
+         if (m_pipeReg1[index]==0)
+         {
+            m_historyPktID[index][0] = 0;
+            m_historyFlitNum[index][0] =0;
+         }
+         break;
+         m_historyPktID[index][0] = m_pipeReg1[index] -> getIdentifier();
+         m_historyFlitNum[index][0] = m_pipeReg1[index] -> flitNumber();
+      }
+      else if (time%ringHopCount == updataInterval)
+      {
+         if (m_pipeReg1[index]==0)
+         {
+            m_historyPktID[index][1] = 0;
+            m_historyFlitNum[index][1] =0;
+         }
+         break;
+         m_historyPktID[index][1] = m_pipeReg1[index] -> getIdentifier();
+         m_historyFlitNum[index][1] = m_pipeReg1[index] -> flitNumber();
+      }
+      else if (time%ringHopCount == updataInterval*2)
+      {
+         if (m_pipeReg1[index]==0)
+         {
+            m_historyPktID[index][2] = 0;
+            m_historyFlitNum[index][2] =0;
+         }
+         break;
+         m_historyPktID[index][2] = m_pipeReg1[index] -> getIdentifier();
+         m_historyFlitNum[index][2] = m_pipeReg1[index] -> flitNumber();
+      }
+   }
+}
+
 void TPZSimpleRouterFlowBless :: portUtilizationReset (unsigned time)
 {
 
@@ -827,24 +957,37 @@ unsigned TPZSimpleRouterFlowBless :: steering (TPZROUTINGTYPE desiredDirection, 
 TPZMessage * TPZSimpleRouterFlowBless :: winner (TPZMessage * msgCh0, TPZMessage * msgCh1)
 {
    TPZMessage * winningFlit;
-   Boolean GP0, GP1;
+   Boolean GP0, GP1; // golden packet
+   Boolean SP0, SP1; // silver packet
    unsigned n0, n1;
 
    if(msgCh0)
    {
       GP0 = msgCh0 -> getGolden();
+      SP0 = msgCh0 -> getSilver();
       n0 = msgCh0 -> flitNumber();
    }
    else
+   {
       GP0 = false;
+      SP0 = false;
+      n0 = 0;
+   }
+      
 
    if(msgCh1)
    {
       n1 = msgCh1 -> flitNumber();
       GP1 = msgCh1 -> getGolden();
+      SP1 = msgCh1 -> getSilver();
    }
    else
+   {
       GP1 = false;
+      SP1 = false;
+      n1 = 0;
+   }
+
 
    if (GP0 == true && GP1 == true)
       winningFlit = (n1<n0) ? msgCh1 : msgCh0;
@@ -859,13 +1002,25 @@ TPZMessage * TPZSimpleRouterFlowBless :: winner (TPZMessage * msgCh0, TPZMessage
       else if (msgCh1!=0 && msgCh0==0)
          winningFlit = msgCh1;
       else // both not empty, choose randomly.
-      {
+      {  
+         /// Silver Flit Win
+         if (SP0 == true && SP1 == true)
+            winningFlit = (n1<n0) ? msgCh1 : msgCh0;
+         else if (SP0 == true)
+            winningFlit = msgCh0;
+         else if (SP1 == true)
+            winningFlit = msgCh1;
+         else // if none of them is silver
+            winningFlit = (n1<n0) ? msgCh1 : msgCh0;
+      
+         /*
+         /// THIS PART NEEDS TO BE CHANGED.
          if (rand() % 2)
             winningFlit = msgCh1; // pseudorandom, generate 0 or 1;
          else
             winningFlit = msgCh0;
          /// most of time, winner will be decided pseudo randomly. It will increase deflection rate, although it is cheap. Can I do better with low cost?
-
+         */
       }
    }
 

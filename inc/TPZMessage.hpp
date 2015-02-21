@@ -396,6 +396,19 @@ public:
    Boolean getGolden() const{
       return m_golden;
    }
+
+	void setSilver(){
+      m_silver = true;
+	}
+
+	void clearSilver(){
+      m_silver = false;
+	}
+
+   // has to be cast as const
+   Boolean getSilver() const{
+      return m_silver;
+   }
    // end CHIPPER Support
 
 #ifdef PTOPAZ
@@ -452,6 +465,7 @@ private:
 
    // CHIPPER Support
    Boolean m_golden;
+   Boolean m_silver;
 
 #ifdef PTOPAZ
 	unsigned  m_PoolIndex;

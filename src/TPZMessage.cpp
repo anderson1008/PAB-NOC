@@ -289,6 +289,7 @@ TPZMessage& TPZMessage::operator=(const TPZMessage& aMessage)
     m_Msgmask = aMessage.getMsgmask();
     m_multiportNumber = aMessage.getMultiportNumber();
     m_golden = aMessage.getGolden(); // CHIPPER Support
+    m_silver = aMessage.getSilver(); // CHIPPER Support
     return *this;
 }
 

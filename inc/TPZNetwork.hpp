@@ -116,7 +116,7 @@
 
       enum { Flit, Packet, Message };
       typedef enum { BufferWrite, BufferRead, VCArbitration, SWArbitration, SWTraversal, IStageTraversal,
-                     OStageTraversal, MPTraversal, LinkTraversal, RouterBypass, DCSleepSum, PGEpochCount, DCWakeup, PGStage1, PGStage2, PGStage3} TPZTipoEvento;
+                     OStageTraversal, MPTraversal, LinkTraversal, RouterBypass, DCSleepSum, PGEpochCount, DCWakeup, PGStage1, PGStage2, PGStage3, Silver} TPZTipoEvento;
 
       TPZNetwork( const TPZComponentId& id,
                   const TPZString& routerId,
@@ -514,6 +514,7 @@
       double  m_PGStage2; //
       double  m_PGStage3; //
       double  m_PGSumOfSquare;
+      double  m_SilverFlit;
       //******************************************************************
       //END OF ADDITION
       //******************************************************************

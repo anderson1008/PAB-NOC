@@ -177,7 +177,7 @@ TPZNetwork::TPZNetwork(const TPZComponentId& id, const TPZString& routerId,
             m_dumpMapInjectors(~0),
             m_ProtocolMessagesTx(0), m_ProtocolMessagesInj(0),
             m_BufferWrite(0), m_BufferRead(0), m_VCArbitration(0),
-            m_SWArbitration(0), m_SWTraversal(0), m_LinkTraversal(0),
+            m_SWArbitration(0), m_SWTraversal(0), m_LinkTraversal(0),m_SilverFlit(0),
             m_RouterBypass(0), m_IStageTraversal(0), m_OStageTraversal(0),
             m_MPTraversal(0), m_DCSleepSum(0), m_PGEpoch(0), m_DCWakeup(0), m_PGStage1(0), m_PGStage2(0), m_PGStage3(0), m_PGSumOfSquare(0),
             m_ProtocolMessagesRx(0), m_ProtocolAverageDistance(0),
@@ -2613,6 +2613,9 @@ void TPZNetwork :: incrEventCount( TPZTipoEvento evento)
      case PGStage3:
          m_PGStage3++;
      return;
+     case Silver:
+         m_SilverFlit++;
+     return;
    }
 }
 
@@ -2674,7 +2677,10 @@ double TPZNetwork :: getEventCount( TPZTipoEvento evento)
 
       case PGStage3:
          return m_PGStage3;
-
+      
+      case Silver:
+         return m_SilverFlit;
+     
    }
 }
 //*************************************************************************

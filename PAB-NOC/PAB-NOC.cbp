@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="PAB-NOC" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/PAB-NOC" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/PAB-NOC" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="../inc/TPZArray.hpp" />
+		<Unit filename="../inc/TPZArray.inl" />
+		<Unit filename="../inc/TPZAttribute.hpp" />
+		<Unit filename="../inc/TPZBase.hpp" />
+		<Unit filename="../inc/TPZBaseCollection.cpp" />
+		<Unit filename="../inc/TPZBaseCollection.hpp" />
+		<Unit filename="../inc/TPZBaseCollection.inl" />
+		<Unit filename="../inc/TPZBuilder.hpp" />
+		<Unit filename="../inc/TPZComponent.hpp" />
+		<Unit filename="../inc/TPZComponentId.hpp" />
+		<Unit filename="../inc/TPZCompositeComponent.hpp" />
+		<Unit filename="../inc/TPZConnection.hpp" />
+		<Unit filename="../inc/TPZConnectionDelay.hpp" />
+		<Unit filename="../inc/TPZConst.hpp" />
+		<Unit filename="../inc/TPZConsumer.hpp" />
+		<Unit filename="../inc/TPZConsumerFlow.hpp" />
+		<Unit filename="../inc/TPZConsumerFlowBless.hpp" />
+		<Unit filename="../inc/TPZConsumerFlowReactive.hpp" />
+		<Unit filename="../inc/TPZConsumerFlowRespTimeSim.hpp" />
+		<Unit filename="../inc/TPZCrossbar.hpp" />
+		<Unit filename="../inc/TPZCrossbarFlow.hpp" />
+		<Unit filename="../inc/TPZCrossbarFlowCT.hpp" />
+		<Unit filename="../inc/TPZCrossbarFlowCTMux.hpp" />
+		<Unit filename="../inc/TPZCrossbarFlowMux.hpp" />
+		<Unit filename="../inc/TPZCrossbarFlowVC.hpp" />
+		<Unit filename="../inc/TPZCrossbarFlowVCMux.hpp" />
+		<Unit filename="../inc/TPZCrossbarFlowVCMuxOpt.hpp" />
+		<Unit filename="../inc/TPZCrossbarFlowVCOpt.hpp" />
+		<Unit filename="../inc/TPZCrossbarFlowVCTorus.hpp" />
+		<Unit filename="../inc/TPZCrossbarFlowVCTorusMux.hpp" />
+		<Unit filename="../inc/TPZCrossbarFlowWH.hpp" />
+		<Unit filename="../inc/TPZDemultiplexor.hpp" />
+		<Unit filename="../inc/TPZDemultiplexorFlow.hpp" />
+		<Unit filename="../inc/TPZError.hpp" />
+		<Unit filename="../inc/TPZEvent.hpp" />
+		<Unit filename="../inc/TPZFicheroLog.hpp" />
+		<Unit filename="../inc/TPZFifoMemory.hpp" />
+		<Unit filename="../inc/TPZFifoMemoryFlow.hpp" />
+		<Unit filename="../inc/TPZFifoMemoryFlowCT.hpp" />
+		<Unit filename="../inc/TPZFifoMemoryFlowCTMcast.hpp" />
+		<Unit filename="../inc/TPZFifoMemoryFlowDamq.hpp" />
+		<Unit filename="../inc/TPZFifoMemoryFlowWH.hpp" />
+		<Unit filename="../inc/TPZFifoMemoryFlowWHMcast.hpp" />
+		<Unit filename="../inc/TPZFlow.hpp" />
+		<Unit filename="../inc/TPZGlobalData.hpp" />
+		<Unit filename="../inc/TPZIniFile.hpp" />
+		<Unit filename="../inc/TPZInjector.hpp" />
+		<Unit filename="../inc/TPZInjectorFlow.hpp" />
+		<Unit filename="../inc/TPZInjectorFlowCT.hpp" />
+		<Unit filename="../inc/TPZInjectorFlowCTUC.hpp" />
+		<Unit filename="../inc/TPZInjectorFlowUC.hpp" />
+		<Unit filename="../inc/TPZInputStage.hpp" />
+		<Unit filename="../inc/TPZInputStageFlow.hpp" />
+		<Unit filename="../inc/TPZInterfaz.hpp" />
+		<Unit filename="../inc/TPZMain.hpp" />
+		<Unit filename="../inc/TPZMatrix.cpp" />
+		<Unit filename="../inc/TPZMatrix.hpp" />
+		<Unit filename="../inc/TPZMatrix.inl" />
+		<Unit filename="../inc/TPZMessage.hpp" />
+		<Unit filename="../inc/TPZMessage[Conflict].hpp" />
+		<Unit filename="../inc/TPZMultiplexor.hpp" />
+		<Unit filename="../inc/TPZMultiplexorFlow.hpp" />
+		<Unit filename="../inc/TPZMultiportFifo.hpp" />
+		<Unit filename="../inc/TPZMultiportFifoFlow.hpp" />
+		<Unit filename="../inc/TPZMultiportIOFifo.hpp" />
+		<Unit filename="../inc/TPZMultiportIOFifoFlow.hpp" />
+		<Unit filename="../inc/TPZNetwork.hpp" />
+		<Unit filename="../inc/TPZNetworkBuilder.hpp" />
+		<Unit filename="../inc/TPZNetworkMesh.hpp" />
+		<Unit filename="../inc/TPZNetworkMidimew.hpp" />
+		<Unit filename="../inc/TPZNetworkSquareMidimew.hpp" />
+		<Unit filename="../inc/TPZNetworkTorus.hpp" />
+		<Unit filename="../inc/TPZNotifier.hpp" />
+		<Unit filename="../inc/TPZObserver.hpp" />
+		<Unit filename="../inc/TPZOptions.hpp" />
+		<Unit filename="../inc/TPZOutputStage.hpp" />
+		<Unit filename="../inc/TPZOutputStageFlow.hpp" />
+		<Unit filename="../inc/TPZPair.hpp" />
+		<Unit filename="../inc/TPZPool.hpp" />
+		<Unit filename="../inc/TPZPool.inl" />
+		<Unit filename="../inc/TPZPort.hpp" />
+		<Unit filename="../inc/TPZPortInput.hpp" />
+		<Unit filename="../inc/TPZPortOutput.hpp" />
+		<Unit filename="../inc/TPZPosition.hpp" />
+		<Unit filename="../inc/TPZPriorityQueue.hpp" />
+		<Unit filename="../inc/TPZPriorityQueue.inl" />
+		<Unit filename="../inc/TPZQueue.hpp" />
+		<Unit filename="../inc/TPZQueue.inl" />
+		<Unit filename="../inc/TPZRouter.hpp" />
+		<Unit filename="../inc/TPZRouterBuilder.hpp" />
+		<Unit filename="../inc/TPZRouting.hpp" />
+		<Unit filename="../inc/TPZRoutingFlow.hpp" />
+		<Unit filename="../inc/TPZRoutingFlowBubble.hpp" />
+		<Unit filename="../inc/TPZRoutingMuxed.hpp" />
+		<Unit filename="../inc/TPZRoutingMuxedFlow.hpp" />
+		<Unit filename="../inc/TPZRoutingMuxedFlowBubble.hpp" />
+		<Unit filename="../inc/TPZRoutingMuxedFlowBubbleAdap.hpp" />
+		<Unit filename="../inc/TPZRunTimeInformation.hpp" />
+		<Unit filename="../inc/TPZRunnableComponent.hpp" />
+		<Unit filename="../inc/TPZSequence.hpp" />
+		<Unit filename="../inc/TPZSequence.inl" />
+		<Unit filename="../inc/TPZSimpleRouter.hpp" />
+		<Unit filename="../inc/TPZSimpleRouterFlow.hpp" />
+		<Unit filename="../inc/TPZSimpleRouterFlowBinoc.hpp" />
+		<Unit filename="../inc/TPZSimpleRouterFlowBless.hpp" />
+		<Unit filename="../inc/TPZSimpleRouterFlowDAMQ.hpp" />
+		<Unit filename="../inc/TPZSimpleRouterFlowFast.hpp" />
+		<Unit filename="../inc/TPZSimpleRouterFlowLigero.hpp" />
+		<Unit filename="../inc/TPZSimpleRouterFlowLigeroMcast.hpp" />
+		<Unit filename="../inc/TPZSimpleRouterFlowTorus.hpp" />
+		<Unit filename="../inc/TPZSimpleRouterFlowWH.hpp" />
+		<Unit filename="../inc/TPZSimulation.hpp" />
+		<Unit filename="../inc/TPZSimulationBuilder.hpp" />
+		<Unit filename="../inc/TPZSimulator.hpp" />
+		<Unit filename="../inc/TPZString.hpp" />
+		<Unit filename="../inc/TPZTable.hpp" />
+		<Unit filename="../inc/TPZTable.inl" />
+		<Unit filename="../inc/TPZTag.hpp" />
+		<Unit filename="../inc/TPZThread.hpp" />
+		<Unit filename="../inc/TPZTrafficPattern.hpp" />
+		<Unit filename="../inc/TPZVector.hpp" />
+		<Unit filename="../src/TPZAttribute.cpp" />
+		<Unit filename="../src/TPZBase.cpp" />
+		<Unit filename="../src/TPZBuilder.cpp" />
+		<Unit filename="../src/TPZComponent.cpp" />
+		<Unit filename="../src/TPZComponentId.cpp" />
+		<Unit filename="../src/TPZCompositeComponent.cpp" />
+		<Unit filename="../src/TPZConnection.cpp" />
+		<Unit filename="../src/TPZConnectionDelay.cpp" />
+		<Unit filename="../src/TPZConst.cpp" />
+		<Unit filename="../src/TPZConsumer.cpp" />
+		<Unit filename="../src/TPZConsumerFlow.cpp" />
+		<Unit filename="../src/TPZConsumerFlowBless.cpp" />
+		<Unit filename="../src/TPZConsumerFlowReactive.cpp" />
+		<Unit filename="../src/TPZConsumerFlowRespTimeSim.cpp" />
+		<Unit filename="../src/TPZCrossbar.cpp" />
+		<Unit filename="../src/TPZCrossbarFlow.cpp" />
+		<Unit filename="../src/TPZCrossbarFlowCT.cpp" />
+		<Unit filename="../src/TPZCrossbarFlowCTMux.cpp" />
+		<Unit filename="../src/TPZCrossbarFlowMux.cpp" />
+		<Unit filename="../src/TPZCrossbarFlowVC.cpp" />
+		<Unit filename="../src/TPZCrossbarFlowVCMux.cpp" />
+		<Unit filename="../src/TPZCrossbarFlowVCMuxOpt.cpp" />
+		<Unit filename="../src/TPZCrossbarFlowVCOpt.cpp" />
+		<Unit filename="../src/TPZCrossbarFlowVCTorus.cpp" />
+		<Unit filename="../src/TPZCrossbarFlowVCTorusMux.cpp" />
+		<Unit filename="../src/TPZCrossbarFlowWH.cpp" />
+		<Unit filename="../src/TPZDemultiplexor.cpp" />
+		<Unit filename="../src/TPZDemultiplexorFlow.cpp" />
+		<Unit filename="../src/TPZError.cpp" />
+		<Unit filename="../src/TPZEvent.cpp" />
+		<Unit filename="../src/TPZFicheroLog.cpp" />
+		<Unit filename="../src/TPZFifoMemory.cpp" />
+		<Unit filename="../src/TPZFifoMemoryFlow.cpp" />
+		<Unit filename="../src/TPZFifoMemoryFlowCT.cpp" />
+		<Unit filename="../src/TPZFifoMemoryFlowCTMcast.cpp" />
+		<Unit filename="../src/TPZFifoMemoryFlowDamq.cpp" />
+		<Unit filename="../src/TPZFifoMemoryFlowWH.cpp" />
+		<Unit filename="../src/TPZFifoMemoryFlowWHMcast.cpp" />
+		<Unit filename="../src/TPZFlow.cpp" />
+		<Unit filename="../src/TPZGlobalData.cpp" />
+		<Unit filename="../src/TPZIniFile.cpp" />
+		<Unit filename="../src/TPZInjector.cpp" />
+		<Unit filename="../src/TPZInjectorFlow.cpp" />
+		<Unit filename="../src/TPZInjectorFlowCT.cpp" />
+		<Unit filename="../src/TPZInjectorFlowCTUC.cpp" />
+		<Unit filename="../src/TPZInjectorFlowUC.cpp" />
+		<Unit filename="../src/TPZInputStage.cpp" />
+		<Unit filename="../src/TPZInputStageFlow.cpp" />
+		<Unit filename="../src/TPZInterfaz.cpp" />
+		<Unit filename="../src/TPZMain.cpp" />
+		<Unit filename="../src/TPZMessage.cpp" />
+		<Unit filename="../src/TPZMultiplexor.cpp" />
+		<Unit filename="../src/TPZMultiplexorFlow.cpp" />
+		<Unit filename="../src/TPZMultiportFifo.cpp" />
+		<Unit filename="../src/TPZMultiportFifoFlow.cpp" />
+		<Unit filename="../src/TPZMultiportIOFifo.cpp" />
+		<Unit filename="../src/TPZMultiportIOFifoFlow.cpp" />
+		<Unit filename="../src/TPZNetwork.cpp" />
+		<Unit filename="../src/TPZNetworkBuilder.cpp" />
+		<Unit filename="../src/TPZNetworkMesh.cpp" />
+		<Unit filename="../src/TPZNetworkMidimew.cpp" />
+		<Unit filename="../src/TPZNetworkSquareMidimew.cpp" />
+		<Unit filename="../src/TPZNetworkTorus.cpp" />
+		<Unit filename="../src/TPZNotifier.cpp" />
+		<Unit filename="../src/TPZObserver.cpp" />
+		<Unit filename="../src/TPZOptions.cpp" />
+		<Unit filename="../src/TPZOutputStage.cpp" />
+		<Unit filename="../src/TPZOutputStageFlow.cpp" />
+		<Unit filename="../src/TPZPort.cpp" />
+		<Unit filename="../src/TPZPortInput.cpp" />
+		<Unit filename="../src/TPZPortOutput.cpp" />
+		<Unit filename="../src/TPZPosition.cpp" />
+		<Unit filename="../src/TPZRouter.cpp" />
+		<Unit filename="../src/TPZRouterBuilder.cpp" />
+		<Unit filename="../src/TPZRouting.cpp" />
+		<Unit filename="../src/TPZRoutingFlow.cpp" />
+		<Unit filename="../src/TPZRoutingFlowBubble.cpp" />
+		<Unit filename="../src/TPZRoutingMuxed.cpp" />
+		<Unit filename="../src/TPZRoutingMuxedFlow.cpp" />
+		<Unit filename="../src/TPZRoutingMuxedFlowBubble.cpp" />
+		<Unit filename="../src/TPZRoutingMuxedFlowBubbleAdap.cpp" />
+		<Unit filename="../src/TPZRunTimeInformation.cpp" />
+		<Unit filename="../src/TPZRunnableComponent.cpp" />
+		<Unit filename="../src/TPZSimpleRouter.cpp" />
+		<Unit filename="../src/TPZSimpleRouterFlow.cpp" />
+		<Unit filename="../src/TPZSimpleRouterFlowBinoc.cpp" />
+		<Unit filename="../src/TPZSimpleRouterFlowBless.cpp" />
+		<Unit filename="../src/TPZSimpleRouterFlowDAMQ.cpp" />
+		<Unit filename="../src/TPZSimpleRouterFlowFast.cpp" />
+		<Unit filename="../src/TPZSimpleRouterFlowLigero.cpp" />
+		<Unit filename="../src/TPZSimpleRouterFlowLigeroMcast.cpp" />
+		<Unit filename="../src/TPZSimpleRouterFlowTorus.cpp" />
+		<Unit filename="../src/TPZSimpleRouterFlowWH.cpp" />
+		<Unit filename="../src/TPZSimulation.cpp" />
+		<Unit filename="../src/TPZSimulationBuilder.cpp" />
+		<Unit filename="../src/TPZSimulator.cpp" />
+		<Unit filename="../src/TPZString.cpp" />
+		<Unit filename="../src/TPZTag.cpp" />
+		<Unit filename="../src/TPZThread.cpp" />
+		<Unit filename="../src/TPZTrafficPattern.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
