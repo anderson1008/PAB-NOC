@@ -159,12 +159,12 @@ void TPZSimpleRouterFlowBless :: initialize()
    m_WU=new Boolean[m_ports+1];
    m_ACK=new Boolean[m_ports+1];
    m_PGLevel = 1;
-   m_portType = new PORTTYPE [m_ports];
-   EpochPG = 50;
+   m_portType = new PORTTYPE [m_ports]; // m_portType is outPort indexed.
+   EpochPG = 20;
    thresholdPG = 5;      // threshold for PG the port loadFactorPerPort = 0.3
    thresholdPGWU = 5;
    thresholdPGLevel2 =  thresholdPG*2;   // threshold for change the PG level of the router loadFactorPerRouter = 0.3
-   thresholdPGLevel3 =  thresholdPG;   // loadFactorPerRouter = 0.15
+   thresholdPGLevel3 =  thresholdPG/2;   // loadFactorPerRouter = 0.15
    WAKEUPDELAY = 2;
    RINGSIZE_PGST1 = 4;
    RINGSIZE_PGST2 = 8;
@@ -191,7 +191,7 @@ void TPZSimpleRouterFlowBless :: initialize()
 	   m_historyPktID[i] = new unsigned [3];
 	   m_historyFlitNum[i] = new unsigned [3];
       m_portState[i] = ACTIVE;
-		
+
 		for (int j=0; j<3; j++) // we only have three buffers to records history headers
 		{
    	   m_historyPktID[i][j] = 0;
@@ -201,7 +201,7 @@ void TPZSimpleRouterFlowBless :: initialize()
 
    for(int i=0; i<m_ports; i++)
    {
-      m_eject[i] = false;  
+      m_eject[i] = false;
       m_pipeReg1[i] = 0;
  //     m_pipeReg2[i] = 0;
       m_interFlit[i] = 0;
@@ -287,7 +287,7 @@ void TPZSimpleRouterFlowBless :: portPowerGate (unsigned time)
       for ( inPort=1; inPort<=4; inPort++)
       {
          outPort = indexMapping(inPort);
-         if (m_portState[inPort]==ACTIVE && m_portType[inPort]==_NONPERMANENT_)
+         if (m_portState[inPort]==ACTIVE && m_portType[outPort]==_NONPERMANENT_)
          {
             if (m_portUtilCount[inPort] < thresholdPG)
             {
@@ -303,11 +303,11 @@ void TPZSimpleRouterFlowBless :: portPowerGate (unsigned time)
          }
          else if (m_portState[inPort]==INACTIVE)
          {
-            if (m_portUtilCount[inPort] >= thresholdPGWU || m_portType[inPort]==_PERMANENT_)
+            if (m_portUtilCount[inPort] >= thresholdPGWU || m_portType[outPort]==_PERMANENT_)
             {
                #ifdef PGDEBUG
                cout << "T = " << time << " @ ROUTER " << getComponent().asString() << "Port " << inPort << endl;
-               if (m_portType[inPort]==_PERMANENT_)
+               if (m_portType[outPort]==_PERMANENT_)
                   cout << "   Port is a PERMANENT type but is INACTIVE now." << endl;
                else if (m_portUtilCount[inPort] >= thresholdPG)
                   cout << "   Port is INACTIVE, but the deflection rate is " << m_portUtilCount[inPort] << endl;
@@ -504,23 +504,6 @@ Boolean TPZSimpleRouterFlowBless :: inputReading()
    cout << texto << endl;
    #endif // DEBUG
 
-   /*
-   if (getComponent().asString()=="ROUTER(0,1,0)" && getOwnerRouter().getCurrentTime() == 1)
-	{
-		cout << getComponent().asString() << endl;
-		outputInterfaz(1)->setPG(true,WU);
-	}
-
-	if (getComponent().asString()=="ROUTER(1,1,0)" && getOwnerRouter().getCurrentTime() == 2)
-	{
-		if (m_WU[1] == true)
-			cout << "YEAH! Router(1,1) Port 1 is WUed!!!" << endl;
-		else
-		   cout << "Oops!" << endl;
-	}*/
-   
-   //if (getComponent().asString()=="ROUTER(3,0,0)" && getOwnerRouter().getCurrentTime() == 544)
-
    unsigned outPort;
    unsigned inPort;
    unsigned time = getOwnerRouter().getCurrentTime();
@@ -531,21 +514,9 @@ Boolean TPZSimpleRouterFlowBless :: inputReading()
    //setInterval();
    //silverCheck(time);
    //updateHistory(time);
- 
+
    bool swapEnable [4] = {};
    cleanOutputInterfaces();
-   #ifdef DEBUG
-   for (int jj=1; jj < m_ports; jj++)
-   {  if (m_pipeReg1[jj]!=0) 
-      {
-         if (m_pipeReg1[jj]->getIdentifier() == 46 &&  m_pipeReg1[jj]->flitNumber() == 3)
-            cout << "TRACK START!" << endl;
-      }            
-   }
-   for (int jj=1; jj < m_ports; jj++)
-      if (m_pipeReg1[jj]!=0)
-         cout << "inChannel " << jj << "has flit." << endl;
-   #endif // DEBUG
 
    swapEnable[0] = permuterBlock (m_pipeReg1[4], m_pipeReg1[2], 1, 1);
    swapEnable[1] = permuterBlock (m_pipeReg1[3], m_pipeReg1[1], 1, 2);
@@ -617,35 +588,33 @@ Boolean TPZSimpleRouterFlowBless :: inputReading()
          */
          switch (outPort)
          {
-            case 1:   
+            case 1:
                         #ifdef DEBUG
-                        cout << "flit " << m_outFlit[1]-> getIdentifier() << "send to North!" << endl; 
+                        cout << "flit " << m_outFlit[1]-> getIdentifier() << "send to North!" << endl;
                         #endif // DEBUG
                         outputInterfaz(3)->sendData(m_outFlit[1]); // Send to North
                         break;
-            case 2:     
+            case 2:
                         #ifdef DEBUG
                         cout << "flit " << m_outFlit[2]-> getIdentifier() << "send to South!" << endl;
                         #endif // DEBUG
                         outputInterfaz(4)->sendData(m_outFlit[2]); // Send to South
                         break;
-            case 3:   
+            case 3:
                         #ifdef DEBUG
                         cout << "flit " << m_outFlit[3]-> getIdentifier() << "send to East!" << endl;
                         #endif // DEBUG
                         outputInterfaz(1)->sendData(m_outFlit[3]); // Send to East
                         break;
-            case 4:   
+            case 4:
                         #ifdef DEBUG
-                        cout << "flit " << m_outFlit[4]-> getIdentifier() << "send to West!" << endl; 
+                        cout << "flit " << m_outFlit[4]-> getIdentifier() << "send to West!" << endl;
                         #endif // DEBUG
                         outputInterfaz(2)->sendData(m_outFlit[4]); // Send to West
                         break;
          }
          m_outFlit[outPort] = 0;
          ((TPZNetwork*)(getOwnerRouter().getOwner()))->incrEventCount( TPZNetwork::SWTraversal);
-         //((TPZNetwork*)(getOwnerRouter().getOwner()))->incrEventCount( TPZNetwork::LinkTraversal);
-         getOwnerRouter().incrLinkUtilization(); // Track the link utilization at each router granularity.
       }
    }
 
@@ -674,34 +643,37 @@ Boolean TPZSimpleRouterFlowBless :: inputReading()
          cout << "        Flit " << m_sync[inPort]->flitNumber() << "/" << m_sync[inPort]->getPacketLength() << endl;
          cout << "        Dest = " << m_sync[inPort]->destiny().asString() << endl;
          if (m_sync[inPort]->getIdentifier() == 46 &&  m_sync[inPort]->flitNumber() == 3)
-            cout << "TRACK START!" << endl;  
+            cout << "TRACK START!" << endl;
          #endif // DEBUG
          m_portUtilCount [inPort] ++;
          routeComputation(m_sync[inPort]);
 
-         bool portFind1 = false;
+         //bool portFind1 = false;
          for (outPort = 1; outPort <= m_ports; outPort++)
          {
             if(getDeltaAbs(m_sync [inPort], outPort)==true)
             {
-               /*
+               
+               /// Section: setRoutingPort
                m_sync [inPort]->setRoutingPort((TPZROUTINGTYPE) outPort);
                /// if the desired outPort is INACTIVE, increment the counter to indicate a deflection event.
-               if (m_portState[outPort] == INACTIVE)
-                  m_portUtilCount [outPort] ++;
+               if (m_portState[indexMapping(outPort)] == INACTIVE)
+                  m_portUtilCount [indexMapping(outPort)] ++;
                break;
-               */
                
-               
+               // replace the above setRoutingPort section with the following to
+               // set productive port in Y dimension as routing port when the productive port in X dimension
+               // is not available.
+               /*
                /// if the desired outPort is INACTIVE, increment the counter to indicate a deflection event.
-               if (m_portState[outPort] != ACTIVE)
+               if (m_portState[indexMapping(outPort)] != ACTIVE)
                {
                   #ifdef DEBUG
                   cout << "    Desired output port = " << outPort << " is INACTIVE." << endl;
                   #endif // DEBUG
-                  m_portUtilCount [outPort] ++;
+                  m_portUtilCount [indexMapping(outPort)] ++;
                }
-               else if (m_portState[outPort] == ACTIVE)
+               else if (m_portState[indexMapping(outPort)] == ACTIVE)
                {
                   portFind1 = true;
                   m_sync [inPort]->setRoutingPort((TPZROUTINGTYPE) outPort);
@@ -710,24 +682,20 @@ Boolean TPZSimpleRouterFlowBless :: inputReading()
                   #endif // DEBUG
                   break;
                }
-               
-               
+               */
             }
          }
          
-         
-         if (portFind1 == false)
-         {
-            // assign default outPort
-            switch (inPort)
-            {
-               case 1:  m_sync [inPort]->setRoutingPort((TPZROUTINGTYPE) 2); break;
-               case 2:  m_sync [inPort]->setRoutingPort((TPZROUTINGTYPE) 1); break;
-               case 3:  m_sync [inPort]->setRoutingPort((TPZROUTINGTYPE) 4); break;
-               case 4:  m_sync [inPort]->setRoutingPort((TPZROUTINGTYPE) 3); break;
-            }
-         }
-         
+         // Has to enable this to assign port in Y dimension as productive port when X dimension is not available.
+         /*
+         if (portFind1 == false)  
+            m_sync [inPort]->setRoutingPort((TPZROUTINGTYPE) (rand() % 4 + 1));
+         */
+         // ************************************************************************* //
+         // ---------         Some analysis when use this scheme      --------------- //
+         // When the productive port in X dimension is disabled, naturally, if a flit can \
+         make forward progress through Y dimension, deflection rate should reduce. If no productive port is available, simply assign a desired port randomly. Let the permutation network handle the deflection.\
+         However, the overall power increase about 8% compared with CHIPPER. The deflection rate increase dramatically. One possible reason is (NOT known for now.)
          
          
          if (goldenCheck (m_sync[inPort]->getIdentifier()) == true)
@@ -791,41 +759,36 @@ Boolean TPZSimpleRouterFlowBless :: inputReading()
             #ifdef DEBUG
             cout<< "Flit " << m_pipeReg1[inPort]->flitNumber() << "/" << m_pipeReg1[inPort]->getPacketLength() <<" of Pkt "\
              << m_pipeReg1[inPort]->getIdentifier() << " Dest = " << m_pipeReg1[inPort]->destiny().asString() << " is injected to inPort =" << inPort << endl;
-             
-            if (m_pipeReg1[inPort]->getIdentifier() == 46 &&  m_pipeReg1[inPort]->flitNumber() == 3)
-            {
-               cout << "TRACK START!" << endl;
-            }
-
             #endif // DEBUG
 
             routeComputation(m_pipeReg1[inPort]);
             //m_portUtilCount[inPort] ++;
-            bool portFind = false;
+            //bool portFind = false;
             for (outPort = 1; outPort < m_ports; outPort++) // no need to check local outPort
             {
                if(getDeltaAbs(m_pipeReg1[inPort], outPort)==true)
                {
-                  //////NOT RIGHT!!!
-                  /*
-                   m_pipeReg1 [inPort]->setRoutingPort((TPZROUTINGTYPE) outPort);
+                  /// Section: setRoutingPort
+                  m_pipeReg1 [inPort]->setRoutingPort((TPZROUTINGTYPE) outPort);
                   /// if the desired outPort is INACTIVE, increment the counter to indicate a deflection event.
-                  if (m_portState[outPort] == INACTIVE)
-                     m_portUtilCount [outPort] ++;
+                  if (m_portState[indexMapping(outPort)] == INACTIVE)
+                     m_portUtilCount [indexMapping(outPort)] ++;
                   break;
-                  */
                   
-                  
+                  // replace the above setRoutingPort section with the following to
+                  // set productive port in Y dimension as routing port when the productive port in X dimension
+                  // is not available.
+                  /*
                   /// if the desired outPort is INACTIVE, increment the counter to indicate a deflection event.
-                  if (m_portState[outPort] != ACTIVE) // portState is input indexed
+                  if (m_portState[indexMapping(outPort)] != ACTIVE) // portState is input indexed
                   {
                      #ifdef DEBUG
                      cout << "    Desired output port = " << outPort << " is INACTIVE." << endl;
                      #endif // DEBUG
-                     m_portUtilCount [outPort] ++;
+                     m_portUtilCount [indexMapping(outPort)] ++;
                   }
-                     
-                  else if (m_portState[outPort] == ACTIVE)
+
+                  else if (m_portState[indexMapping(outPort)] == ACTIVE)
                   {
                      portFind = true;
                      m_pipeReg1 [inPort]->setRoutingPort((TPZROUTINGTYPE) outPort);
@@ -834,23 +797,15 @@ Boolean TPZSimpleRouterFlowBless :: inputReading()
                      #endif // DEBUG
                      break;
                   }
-                  
-                     
+                  */
+
                }
             }
-            
+            // Has to enable this to assign port in Y dimension as productive port when X dimension is not available.
+            /*
             if (portFind == false)
-            {
-               // assign default outPort
-               switch (inPort)
-               {
-                  case 1:  m_pipeReg1 [inPort]->setRoutingPort((TPZROUTINGTYPE) 2); break;
-                  case 2:  m_pipeReg1 [inPort]->setRoutingPort((TPZROUTINGTYPE) 1); break;
-                  case 3:  m_pipeReg1 [inPort]->setRoutingPort((TPZROUTINGTYPE) 4); break;
-                  case 4:  m_pipeReg1 [inPort]->setRoutingPort((TPZROUTINGTYPE) 3); break;
-               }
-            }
-            
+               m_pipeReg1 [inPort]->setRoutingPort((TPZROUTINGTYPE) (rand() % 4 + 1));
+            */
             if (goldenCheck (m_pipeReg1[inPort]->getIdentifier()) == true)
             {
                m_pipeReg1[inPort]->setGolden();
@@ -903,7 +858,7 @@ void TPZSimpleRouterFlowBless :: silverCheck (unsigned time)
              )
              {
                 m_pipeReg1[index] -> setSilver();
-               ((TPZNetwork*)(getOwnerRouter().getOwner()))->incrEventCount( TPZNetwork::Silver);            
+               ((TPZNetwork*)(getOwnerRouter().getOwner()))->incrEventCount( TPZNetwork::Silver);
              }
          else
             m_pipeReg1[index] -> clearSilver();
@@ -1084,7 +1039,7 @@ TPZMessage * TPZSimpleRouterFlowBless :: winner (TPZMessage * msgCh0, TPZMessage
       SP0 = false;
       n0 = 0;
    }
-      
+
 
    if(msgCh1)
    {
@@ -1113,7 +1068,7 @@ TPZMessage * TPZSimpleRouterFlowBless :: winner (TPZMessage * msgCh0, TPZMessage
       else if (msgCh1!=0 && msgCh0==0)
          winningFlit = msgCh1;
       else // both not empty, choose randomly.
-      {  
+      {
          /// Silver Flit Win
          if (SP0 == true && SP1 == true)
             winningFlit = (n1<n0) ? msgCh1 : msgCh0;
@@ -1123,7 +1078,7 @@ TPZMessage * TPZSimpleRouterFlowBless :: winner (TPZMessage * msgCh0, TPZMessage
             winningFlit = msgCh1;
          else // if none of them is silver
             winningFlit = (n1<n0) ? msgCh1 : msgCh0;
-      
+
          /*
          /// THIS PART NEEDS TO BE CHANGED.
          if (rand() % 2)
@@ -1159,7 +1114,7 @@ bool TPZSimpleRouterFlowBless :: permuterBlock (TPZMessage * msg0, TPZMessage * 
    // No msg arrives
    if (msg0==0 && msg1==0)
       return false;
-   
+
 
    // swap[i] = 1 if any one of the associated inPort or outPort is power-gated.
    if (stage == 1 && pos == 1)
@@ -1176,20 +1131,75 @@ bool TPZSimpleRouterFlowBless :: permuterBlock (TPZMessage * msg0, TPZMessage * 
          return false;
       /*else if (m_portState[2] == INACTIVE || m_portState[4] == INACTIVE)
          if (msg0!=0 && msg1!=0)
-            return true; */  
+            return true; */
    }
    else if (stage == 2 && pos == 1)
    {
       if (m_portState[4] == INACTIVE || m_portState[3] == INACTIVE)
          return false;
+      /// U-turn Prevention
+      if (msg0 != 0 && msg1!=0)
+      {
+         if (msg0->getRoutingPort() != _Yplus_ && msg0->getRoutingPort() != _Yminus_ &&\
+          msg1->getRoutingPort() != _Yplus_ && msg1->getRoutingPort() != _Yminus_)
+          {
+            if (msg0->getInputInterfaz() == 4 || msg1->getInputInterfaz() == 3)
+            return true;
+         }
+      }
+      else if (msg0 != 0)
+      {
+         if (msg0->getRoutingPort() != _Yplus_ && msg0->getRoutingPort() != _Yminus_)
+          {
+            if (msg0->getInputInterfaz() == 4)
+            return true;
+         }
+      }
+      else if (msg1 != 0)
+      {
+         if (msg1->getRoutingPort() != _Yplus_ && msg1->getRoutingPort() != _Yminus_)
+          {
+            if (msg1->getInputInterfaz() == 3)
+            return true;
+         }
+      }
+      // end U-turn Prevention
       /*else if (m_portState[1] == INACTIVE || m_portState[2] == INACTIVE)
          if (msg0!=0 && msg1!=0)
-            return true;*/   
+            return true;*/
    }
    else if (stage == 2 && pos == 2)
    {
       if (m_portState[2] == INACTIVE || m_portState[1] == INACTIVE)
          return false;
+      
+      /// U-turn Prevention
+      if (msg0 != 0 && msg1!=0)
+      {
+         if (msg0->getRoutingPort() != _Xplus_ && msg0->getRoutingPort() != _Xminus_ && \
+          msg1->getRoutingPort() != _Xplus_ && msg1->getRoutingPort() != _Xminus_)
+          {
+            if (msg0->getInputInterfaz() == 2 || msg1->getInputInterfaz() == 1)
+            return true;
+         }
+      }
+      else if (msg0 != 0)
+      {
+         if (msg0->getRoutingPort() != _Xplus_ && msg0->getRoutingPort() != _Xminus_)
+          {
+            if (msg0->getInputInterfaz() == 2)
+            return true;
+         }
+      }
+      else if (msg1 != 0)
+      {
+         if (msg1->getRoutingPort() != _Xplus_ && msg1->getRoutingPort() != _Xminus_)
+          {
+            if (msg1->getInputInterfaz() == 1)
+            return true;
+         }
+      }
+      // end U-turn Prevention
       /*else if (m_portState[4] == INACTIVE || m_portState[3] == INACTIVE)
          if (msg0!=0 && msg1!=0)
             return true;*/
@@ -1285,9 +1295,6 @@ void TPZSimpleRouterFlowBless :: updatePG (unsigned interfaz, unsigned cv)
 	m_WU [interfaz] = inputInterfaz(interfaz)->getPG(WU);
 	m_ACK [interfaz] = inputInterfaz(interfaz)->getPG(ACK);
 }
-
-
-
 
 
 //*************************************************************************
