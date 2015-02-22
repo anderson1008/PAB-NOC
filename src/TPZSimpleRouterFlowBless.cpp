@@ -148,7 +148,7 @@ void TPZSimpleRouterFlowBless :: initialize()
    m_pipeReg1 = new TPZMessage*[m_ports];
 //   m_pipeReg2 = new TPZMessage*[m_ports];
    m_eject = new Boolean [m_ports];
-   m_portState = new PORTSTATE [m_ports];
+   m_portState = new PORTSTATE [m_ports+1];
    m_connEstablished=new Boolean[m_ports+1];
    pktIdGolden = 1;
    m_interFlit = new TPZMessage * [m_ports];
@@ -190,6 +190,7 @@ void TPZSimpleRouterFlowBless :: initialize()
       // m_historyFlitNum[i] = 0;
 	   m_historyPktID[i] = new unsigned [3];
 	   m_historyFlitNum[i] = new unsigned [3];
+      m_portState[i] = ACTIVE;
 		
 		for (int j=0; j<3; j++) // we only have three buffers to records history headers
 		{
@@ -200,8 +201,7 @@ void TPZSimpleRouterFlowBless :: initialize()
 
    for(int i=0; i<m_ports; i++)
    {
-      m_eject[i] = false;
-      m_portState[i] = ACTIVE;
+      m_eject[i] = false;  
       m_pipeReg1[i] = 0;
  //     m_pipeReg2[i] = 0;
       m_interFlit[i] = 0;
@@ -270,6 +270,7 @@ unsigned TPZSimpleRouterFlowBless :: indexMapping (unsigned inIndex)
       case 2: outIndex = 1; break;   // Port W
       case 3: outIndex = 4; break;   // Port N
       case 4: outIndex = 3; break;   // Port S
+      case 5: outIndex = 5; break;   // Port Local
       default:
          cout << "Beyond the scope in TPZSimpleRouterFlowBless :: indexMapping." << endl;
          break;
@@ -516,8 +517,9 @@ Boolean TPZSimpleRouterFlowBless :: inputReading()
 			cout << "YEAH! Router(1,1) Port 1 is WUed!!!" << endl;
 		else
 		   cout << "Oops!" << endl;
-	}
-   */
+	}*/
+   
+   //if (getComponent().asString()=="ROUTER(3,0,0)" && getOwnerRouter().getCurrentTime() == 544)
 
    unsigned outPort;
    unsigned inPort;
@@ -526,38 +528,46 @@ Boolean TPZSimpleRouterFlowBless :: inputReading()
    //**********************************************************************************************************
    // PART3: Permutation Network
    //*********************************************************************************************************
-   setInterval();
-   silverCheck(time);
-   updateHistory(time);
+   //setInterval();
+   //silverCheck(time);
+   //updateHistory(time);
  
    bool swapEnable [4] = {};
    cleanOutputInterfaces();
+   #ifdef DEBUG
+   for (int jj=1; jj < m_ports; jj++)
+   {  if (m_pipeReg1[jj]!=0) 
+      {
+         if (m_pipeReg1[jj]->getIdentifier() == 46 &&  m_pipeReg1[jj]->flitNumber() == 3)
+            cout << "TRACK START!" << endl;
+      }            
+   }
+   for (int jj=1; jj < m_ports; jj++)
+      if (m_pipeReg1[jj]!=0)
+         cout << "inChannel " << jj << "has flit." << endl;
+   #endif // DEBUG
 
-   /// the following operations are affected by PG policy
-
-   // end of operations affected by PG policy
-
-   swapEnable[0] = permuterBlock (m_pipeReg1[1], m_pipeReg1[2], 1, 1);
-   swapEnable[1] = permuterBlock (m_pipeReg1[3], m_pipeReg1[4], 1, 2);
+   swapEnable[0] = permuterBlock (m_pipeReg1[4], m_pipeReg1[2], 1, 1);
+   swapEnable[1] = permuterBlock (m_pipeReg1[3], m_pipeReg1[1], 1, 2);
    if (swapEnable[0]==true)
    {
       m_interFlit[1] = m_pipeReg1[2];
-      m_interFlit[2] = m_pipeReg1[1];
+      m_interFlit[2] = m_pipeReg1[4];
    }
    else
    {
-      m_interFlit[1] = m_pipeReg1[1];
+      m_interFlit[1] = m_pipeReg1[4];
       m_interFlit[2] = m_pipeReg1[2];
    }
    if (swapEnable[1]==true)
    {
-      m_interFlit[3] = m_pipeReg1[4];
+      m_interFlit[3] = m_pipeReg1[1];
       m_interFlit[4] = m_pipeReg1[3];
    }
    else
    {
       m_interFlit[3] = m_pipeReg1[3];
-      m_interFlit[4] = m_pipeReg1[4];
+      m_interFlit[4] = m_pipeReg1[1];
    }
 //   swapFlit (m_pipeReg1[0],m_pipeReg1[1],&(m_interFlit[0]),&(m_interFlit[1]),swapEnable[0]);
 //   swapFlit (m_pipeReg1[2],m_pipeReg1[3],&m_interFlit[2],&m_interFlit[3],swapEnable[1]);
@@ -607,13 +617,29 @@ Boolean TPZSimpleRouterFlowBless :: inputReading()
          */
          switch (outPort)
          {
-            case 1:   outputInterfaz(3)->sendData(m_outFlit[1]); // Send to North
+            case 1:   
+                        #ifdef DEBUG
+                        cout << "flit " << m_outFlit[1]-> getIdentifier() << "send to North!" << endl; 
+                        #endif // DEBUG
+                        outputInterfaz(3)->sendData(m_outFlit[1]); // Send to North
                         break;
-            case 2:   outputInterfaz(4)->sendData(m_outFlit[2]); // Send to South
+            case 2:     
+                        #ifdef DEBUG
+                        cout << "flit " << m_outFlit[2]-> getIdentifier() << "send to South!" << endl;
+                        #endif // DEBUG
+                        outputInterfaz(4)->sendData(m_outFlit[2]); // Send to South
                         break;
-            case 3:   outputInterfaz(1)->sendData(m_outFlit[3]); // Send to East
+            case 3:   
+                        #ifdef DEBUG
+                        cout << "flit " << m_outFlit[3]-> getIdentifier() << "send to East!" << endl;
+                        #endif // DEBUG
+                        outputInterfaz(1)->sendData(m_outFlit[3]); // Send to East
                         break;
-            case 4:   outputInterfaz(2)->sendData(m_outFlit[4]); // Send to West
+            case 4:   
+                        #ifdef DEBUG
+                        cout << "flit " << m_outFlit[4]-> getIdentifier() << "send to West!" << endl; 
+                        #endif // DEBUG
+                        outputInterfaz(2)->sendData(m_outFlit[4]); // Send to West
                         break;
          }
          m_outFlit[outPort] = 0;
@@ -647,20 +673,63 @@ Boolean TPZSimpleRouterFlowBless :: inputReading()
          cout << "        PktID = " << m_sync[inPort]->getIdentifier() << endl;
          cout << "        Flit " << m_sync[inPort]->flitNumber() << "/" << m_sync[inPort]->getPacketLength() << endl;
          cout << "        Dest = " << m_sync[inPort]->destiny().asString() << endl;
+         if (m_sync[inPort]->getIdentifier() == 46 &&  m_sync[inPort]->flitNumber() == 3)
+            cout << "TRACK START!" << endl;  
          #endif // DEBUG
          m_portUtilCount [inPort] ++;
          routeComputation(m_sync[inPort]);
+
+         bool portFind1 = false;
          for (outPort = 1; outPort <= m_ports; outPort++)
          {
             if(getDeltaAbs(m_sync [inPort], outPort)==true)
             {
+               /*
                m_sync [inPort]->setRoutingPort((TPZROUTINGTYPE) outPort);
                /// if the desired outPort is INACTIVE, increment the counter to indicate a deflection event.
                if (m_portState[outPort] == INACTIVE)
                   m_portUtilCount [outPort] ++;
                break;
+               */
+               
+               
+               /// if the desired outPort is INACTIVE, increment the counter to indicate a deflection event.
+               if (m_portState[outPort] != ACTIVE)
+               {
+                  #ifdef DEBUG
+                  cout << "    Desired output port = " << outPort << " is INACTIVE." << endl;
+                  #endif // DEBUG
+                  m_portUtilCount [outPort] ++;
+               }
+               else if (m_portState[outPort] == ACTIVE)
+               {
+                  portFind1 = true;
+                  m_sync [inPort]->setRoutingPort((TPZROUTINGTYPE) outPort);
+                  #ifdef DEBUG
+                  cout << "    Desired output port = " << outPort << " is ACTIVE and set." << endl;
+                  #endif // DEBUG
+                  break;
+               }
+               
+               
             }
          }
+         
+         
+         if (portFind1 == false)
+         {
+            // assign default outPort
+            switch (inPort)
+            {
+               case 1:  m_sync [inPort]->setRoutingPort((TPZROUTINGTYPE) 2); break;
+               case 2:  m_sync [inPort]->setRoutingPort((TPZROUTINGTYPE) 1); break;
+               case 3:  m_sync [inPort]->setRoutingPort((TPZROUTINGTYPE) 4); break;
+               case 4:  m_sync [inPort]->setRoutingPort((TPZROUTINGTYPE) 3); break;
+            }
+         }
+         
+         
+         
          if (goldenCheck (m_sync[inPort]->getIdentifier()) == true)
             m_sync[inPort]->setGolden();
          else
@@ -721,25 +790,67 @@ Boolean TPZSimpleRouterFlowBless :: inputReading()
             m_injectionQueue.dequeue(m_pipeReg1[inPort]); // Anderson: construct a outstanding msg.
             #ifdef DEBUG
             cout<< "Flit " << m_pipeReg1[inPort]->flitNumber() << "/" << m_pipeReg1[inPort]->getPacketLength() <<" of Pkt "\
-             << m_pipeReg1[inPort]->getIdentifier() << " is injected to inPort =" << inPort << endl;
+             << m_pipeReg1[inPort]->getIdentifier() << " Dest = " << m_pipeReg1[inPort]->destiny().asString() << " is injected to inPort =" << inPort << endl;
+             
+            if (m_pipeReg1[inPort]->getIdentifier() == 46 &&  m_pipeReg1[inPort]->flitNumber() == 3)
+            {
+               cout << "TRACK START!" << endl;
+            }
+
             #endif // DEBUG
 
             routeComputation(m_pipeReg1[inPort]);
             //m_portUtilCount[inPort] ++;
+            bool portFind = false;
             for (outPort = 1; outPort < m_ports; outPort++) // no need to check local outPort
             {
                if(getDeltaAbs(m_pipeReg1[inPort], outPort)==true)
                {
-                  m_pipeReg1 [inPort]->setRoutingPort((TPZROUTINGTYPE) outPort);
+                  //////NOT RIGHT!!!
+                  /*
+                   m_pipeReg1 [inPort]->setRoutingPort((TPZROUTINGTYPE) outPort);
                   /// if the desired outPort is INACTIVE, increment the counter to indicate a deflection event.
                   if (m_portState[outPort] == INACTIVE)
                      m_portUtilCount [outPort] ++;
-                  #ifdef DEBUG
-                  cout << "    Desired output port = " << outPort << endl;
-                  #endif // DEBUG
                   break;
+                  */
+                  
+                  
+                  /// if the desired outPort is INACTIVE, increment the counter to indicate a deflection event.
+                  if (m_portState[outPort] != ACTIVE) // portState is input indexed
+                  {
+                     #ifdef DEBUG
+                     cout << "    Desired output port = " << outPort << " is INACTIVE." << endl;
+                     #endif // DEBUG
+                     m_portUtilCount [outPort] ++;
+                  }
+                     
+                  else if (m_portState[outPort] == ACTIVE)
+                  {
+                     portFind = true;
+                     m_pipeReg1 [inPort]->setRoutingPort((TPZROUTINGTYPE) outPort);
+                     #ifdef DEBUG
+                     cout << "    Desired output port = " << outPort << " is ACTIVE and set."  << endl;
+                     #endif // DEBUG
+                     break;
+                  }
+                  
+                     
                }
             }
+            
+            if (portFind == false)
+            {
+               // assign default outPort
+               switch (inPort)
+               {
+                  case 1:  m_pipeReg1 [inPort]->setRoutingPort((TPZROUTINGTYPE) 2); break;
+                  case 2:  m_pipeReg1 [inPort]->setRoutingPort((TPZROUTINGTYPE) 1); break;
+                  case 3:  m_pipeReg1 [inPort]->setRoutingPort((TPZROUTINGTYPE) 4); break;
+                  case 4:  m_pipeReg1 [inPort]->setRoutingPort((TPZROUTINGTYPE) 3); break;
+               }
+            }
+            
             if (goldenCheck (m_pipeReg1[inPort]->getIdentifier()) == true)
             {
                m_pipeReg1[inPort]->setGolden();
@@ -1055,33 +1166,33 @@ bool TPZSimpleRouterFlowBless :: permuterBlock (TPZMessage * msg0, TPZMessage * 
    {
       if (m_portState[4] == INACTIVE || m_portState[2] == INACTIVE)
          return false;
-      else if (m_portState[1] == INACTIVE || m_portState[3] == INACTIVE)
+      /*else if (m_portState[1] == INACTIVE || m_portState[3] == INACTIVE)
          if (msg0!=0 && msg1!=0)
-            return true;
+            return true;*/
    }
    else if (stage == 1 && pos == 2)
    {
       if (m_portState[3] == INACTIVE || m_portState[1] == INACTIVE)
          return false;
-      else if (m_portState[2] == INACTIVE || m_portState[4] == INACTIVE)
+      /*else if (m_portState[2] == INACTIVE || m_portState[4] == INACTIVE)
          if (msg0!=0 && msg1!=0)
-            return true;   
+            return true; */  
    }
    else if (stage == 2 && pos == 1)
    {
       if (m_portState[4] == INACTIVE || m_portState[3] == INACTIVE)
          return false;
-      else if (m_portState[1] == INACTIVE || m_portState[2] == INACTIVE)
+      /*else if (m_portState[1] == INACTIVE || m_portState[2] == INACTIVE)
          if (msg0!=0 && msg1!=0)
-            return true;   
+            return true;*/   
    }
    else if (stage == 2 && pos == 2)
    {
       if (m_portState[2] == INACTIVE || m_portState[1] == INACTIVE)
          return false;
-      else if (m_portState[4] == INACTIVE || m_portState[3] == INACTIVE)
+      /*else if (m_portState[4] == INACTIVE || m_portState[3] == INACTIVE)
          if (msg0!=0 && msg1!=0)
-            return true;
+            return true;*/
    }
 
 
