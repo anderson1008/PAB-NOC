@@ -374,6 +374,15 @@
       {
          return m_PGSumOfSquare;
       }
+      double incrPGCyleSum(double x)
+      {
+         m_PGSum = m_PGSum + x;
+      }
+      double getPGSum (void)
+      {
+         return m_PGSum;
+      }
+      double TIME_FUL_DISCHARGE;
       //******************************************************************
       //END OF ADDITION
       //******************************************************************
@@ -515,6 +524,7 @@
       double  m_PGStage3; //
       double  m_PGSumOfSquare;
       double  m_SilverFlit;
+      double  m_PGSum;
       //******************************************************************
       //END OF ADDITION
       //******************************************************************

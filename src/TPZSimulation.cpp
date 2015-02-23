@@ -712,63 +712,81 @@ TPZString TPZSimulation :: writeSimulationStatus()
              TPZString("\n DC Sleep                = ") + TPZString(m_Network->getEventCount( TPZNetwork::DCSleepSum))+
              TPZString("\n DC Wakeup               = ") + TPZString(m_Network->getEventCount( TPZNetwork::DCWakeup))+
              TPZString("\n Silver Count            = ") + TPZString(m_Network->getEventCount( TPZNetwork::Silver))+
-
-	     TPZString("\n\n**********************************************************")+
-	     TPZString("\n");
+             
+             TPZString("\n\n**********************************************************")+
+             TPZString("\n");
 
 
              TPZString("***************************  Power  Consumption ******************* \n");
-             double m_goldenCounterDynamicPower = 9.72/5; // in uW / ns
-             double m_pgCounterDynamicPower = 9.91/5;
-             double m_loadTrackDynamicPower = 71.64/5;
-             double m_portPGLevelDynamicPower = 15.22/5;
+             double m_frequencyScalingFactor = 2; // with respect to 1GHz (e.g. 2 <=> 500MHz)
+             double m_toggleRateScalingFactor = 5; // with respect to 0.5 (e.g. 5 <=> 0.1)
+             double m_goldenCounterDynamicPower = 9.72/(m_frequencyScalingFactor*m_toggleRateScalingFactor); // in uW / ns
+             double m_pgCounterDynamicPower = 9.91/(m_frequencyScalingFactor*m_toggleRateScalingFactor);
+             double m_loadTrackDynamicPower = 71.64/(m_frequencyScalingFactor*m_toggleRateScalingFactor);
+             double m_portPGLevelDynamicPower = 15.22/(m_frequencyScalingFactor*m_toggleRateScalingFactor);
              //double m_fsmPGDynamicPower = 20.77*4;
              double m_fsmPGDynamicPower = 0;  //only happen when port has transition, ignored here.
-             double m_perDCDynamicPower = 3000/5;  // uW per DC per second
+             double m_perDCDynamicPower = 3000/(m_frequencyScalingFactor*m_toggleRateScalingFactor);  // uW per DC per second
              double m_goldenCounterLeakage = 4.4;
              double m_pgCounterLeakage = 2.0;
              double m_loadTrackLeakage = 11.2;
              double m_portPGLevelLeakage = 0.3;
              double m_fsmPGLeakage = 1.4*4;
              double m_perDCLeakage = 78.51;
+             double m_PGWindow = 10;
              double m_frequency = 1;   // Frequency scaling factor (no use, just ignore)
+   
 
+             //double m_overallStaticPower = (m_goldenCounterLeakage + m_pgCounterLeakage + m_loadTrackLeakage + m_portPGLevelLeakage + m_fsmPGLeakage) * m_Clock * nodes + m_perDCLeakage  * (m_Clock*nodes*4 - m_Network->getEventCount(TPZNetwork::DCSleepSum));
+             
+            // Static Power
+            double m_savedPowerQuadratic = m_Network->getPGSumOfSquare()*(m_perDCLeakage * 0.1*0.2*m_perDCLeakage*1.1/2/m_perDCDynamicPower /1.3/0.025/2/(0.5+0.5))/m_frequency;
+            double m_savedPowerLinear = m_perDCLeakage*m_Network->getPGSum();
+            double m_savedPower = m_savedPowerQuadratic + m_savedPowerLinear;
+            double m_overallStaticPower = (m_goldenCounterLeakage + m_pgCounterLeakage + m_loadTrackLeakage + m_portPGLevelLeakage + m_fsmPGLeakage + m_perDCLeakage*4)*m_Clock/m_frequency*nodes - m_savedPower;
 
-             double m_overallDynamicPower =  (m_goldenCounterDynamicPower + m_pgCounterDynamicPower  \
-                                             + m_fsmPGDynamicPower)*m_Clock/m_frequency*nodes \
-                                             + (m_perDCDynamicPower + m_loadTrackDynamicPower/4)/m_frequency*m_Network->getEventCount( TPZNetwork::SWTraversal) \
-                                             + m_portPGLevelDynamicPower/m_frequency*m_Clock/1000*nodes;
+            // Dynamic Power
+            double m_overheadPower = (2 * 0.1 / 0.2 * m_perDCLeakage/m_frequency) * m_Network->getEventCount( TPZNetwork::DCWakeup);
+            double m_overallDynamicPower =  (m_goldenCounterDynamicPower + m_pgCounterDynamicPower  \
+                  + m_fsmPGDynamicPower)*m_Clock/m_frequency*nodes \
+                  + (m_perDCDynamicPower + m_loadTrackDynamicPower/4)/m_frequency*m_Network->getEventCount( TPZNetwork::SWTraversal) + m_portPGLevelDynamicPower/m_frequency*m_Clock/m_PGWindow*nodes + m_overheadPower;
+                                             
+            // Overall Power
+            double m_overallPowerAfterPG = m_overallDynamicPower + m_overallStaticPower;
+             
 
-             double m_overallStaticPower = (m_goldenCounterLeakage + m_pgCounterLeakage + m_loadTrackLeakage + \
-                                             m_portPGLevelLeakage + m_fsmPGLeakage + m_perDCLeakage*4)*m_Clock/m_frequency*nodes;
-
-             double m_savedPower = m_Network->getPGSumOfSquare()*(m_perDCLeakage * 0.1*0.2*m_perDCLeakage*1.1/2/m_perDCDynamicPower /1.3/0.025/2/(0.5+0.5))/m_frequency;
-
-             double m_overheadPower = (2 * 0.1 / 0.2 * m_perDCLeakage/m_frequency) * m_Network->getEventCount( TPZNetwork::DCWakeup);
-
-             double m_overallPowerAfterPG = m_overallDynamicPower + m_overallStaticPower - m_savedPower + m_overheadPower;
-
+             /// Result of CHIPPER 
              double numOFSWTraversalCHIPPER = 219843;
              double overallPowerCHIPPER = 644;
              double dynamicPowerCHIPPER = 644 * 0.21;
              double staticPowerCHIPPER = 644 * 0.79;
 
-             double staticPowerReduced = m_savedPower/1000000/staticPowerCHIPPER * 100;
-             double overallPowerSave = (overallPowerCHIPPER - m_overallPowerAfterPG/1000000)/overallPowerCHIPPER * 100;
-
+             //double staticPowerReduced = m_savedPower/1000000/staticPowerCHIPPER * 100;
+             //double overallPowerSave = (overallPowerCHIPPER - m_overallPowerAfterPG/1000000)/overallPowerCHIPPER * 100;
+             
+             /*
              buffer += TPZString("Number of PG Epoch         =       ") + TPZString(m_Network->getEventCount(TPZNetwork::PGEpochCount)) + TPZString(" \n");
              buffer += TPZString("Number of Cycle @ PGStage1 =       ") + TPZString(m_Network->getEventCount(TPZNetwork::PGStage1)) + TPZString(" \n");
              buffer += TPZString("Number of Cycle @ PGStage2 =       ") + TPZString(m_Network->getEventCount(TPZNetwork::PGStage2)) + TPZString(" \n");
              buffer += TPZString("Number of Cycle @ PGStage3 =       ") + TPZString(m_Network->getEventCount(TPZNetwork::PGStage3)) + TPZString(" \n");
-             buffer += TPZString("PGSumOfSquare              =       ") + TPZString(m_Network->getPGSumOfSquare()) + TPZString(" \n");
+             */
+             
+             // / Print out the absolute value of Power
              buffer += TPZString("OverallPowerAfterPG        =       ") + TPZString(m_overallPowerAfterPG/1000000) + TPZString(" W \n");
-             //buffer += TPZString("OverheadPower              =       ") + TPZString(m_overheadPower/1000000) + TPZString(" W \n");
-             buffer += TPZString("Static Power Saved         =       ") + TPZString(staticPowerReduced) + TPZString(" % \n");
+             buffer += TPZString("Dynamic Power              =       ") + TPZString(m_overallDynamicPower/m_overallPowerAfterPG * 100) + TPZString(" % \n");
+             buffer += TPZString("Static Power               =       ") + TPZString(m_overallStaticPower/m_overallPowerAfterPG*100) + TPZString(" % \n");
+             buffer += TPZString("Overhead Power             =       ") + TPZString((m_overheadPower/m_overallPowerAfterPG*100)) + TPZString(" % \n");
+             //buffer += TPZString("Saved Power                =       ") + TPZString(m_savedPower/1000000) + TPZString(" W \n");
+             
+             /// Print out the relative saving/overhead of Power
+             /*
              buffer += TPZString("Power Saved of Overall     =       ") + TPZString(overallPowerSave) + TPZString(" % \n");
-             buffer += TPZString("Dynamic Power increase     =       ") + TPZString((m_overallDynamicPower/1000000-dynamicPowerCHIPPER)/dynamicPowerCHIPPER*100) + TPZString(" % \n");
-             //buffer += TPZString("Overhead Power accounts for        ") + TPZString((m_overheadPower/m_overallPowerAfterPG*100)) + TPZString(" % \n");
+             buffer += TPZString("Static Power Saved         =       ") + TPZString(staticPowerReduced) + TPZString(" % \n");
+             buffer += TPZString("Dynamic Power increase     =       ") + TPZString((m_overallDynamicPower/1000000-dynamicPowerCHIPPER)/dynamicPowerCHIPPER*100) + TPZString(" % \n");            
              buffer += TPZString("Sw Traversal increase      =       ") + TPZString((m_Network->getEventCount( TPZNetwork::SWTraversal) - numOFSWTraversalCHIPPER)/numOFSWTraversalCHIPPER*100) + TPZString(" % \n");
-
+             */
+            
+             //buffer += TPZString("OverheadPower              =       ") + TPZString(m_overheadPower/1000000) + TPZString(" W \n");
              //****************************************************************************************************************************
              // VERBOSITY=1
              //****************************************************************************************************************************

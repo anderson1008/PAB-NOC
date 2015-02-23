@@ -160,9 +160,9 @@ void TPZSimpleRouterFlowBless :: initialize()
    m_ACK=new Boolean[m_ports+1];
    m_PGLevel = 1;
    m_portType = new PORTTYPE [m_ports]; // m_portType is outPort indexed.
-   EpochPG = 20;
-   thresholdPG = 5;      // threshold for PG the port loadFactorPerPort = 0.3
-   thresholdPGWU = 5;
+   EpochPG = 10;
+   thresholdPG = 3;      // threshold for PG the port loadFactorPerPort = 0.3
+   thresholdPGWU = 3;
    thresholdPGLevel2 =  thresholdPG*2;   // threshold for change the PG level of the router loadFactorPerRouter = 0.3
    thresholdPGLevel3 =  thresholdPG/2;   // loadFactorPerRouter = 0.15
    WAKEUPDELAY = 2;
@@ -315,7 +315,16 @@ void TPZSimpleRouterFlowBless :: portPowerGate (unsigned time)
                cout << "   WU is asserted." << endl;
                #endif // PGDEBUG
                m_portState[inPort] = WAKEUPTX;
-               ((TPZNetwork*)(getOwnerRouter().getOwner()))->incrPGCyleSumOfSuqare(m_consecutivePG[inPort]*m_consecutivePG[inPort]);
+               //((TPZNetwork*)(getOwnerRouter().getOwner()))->incrPGCyleSumOfSuqare(m_consecutivePG[inPort]*m_consecutivePG[inPort]);
+               if (m_consecutivePG[inPort] < ((TPZNetwork*)(getOwnerRouter().getOwner()))->TIME_FUL_DISCHARGE)
+                  ((TPZNetwork*)(getOwnerRouter().getOwner()))->incrPGCyleSumOfSuqare(m_consecutivePG[inPort]*m_consecutivePG[inPort]);
+               else
+               {
+                  ((TPZNetwork*)(getOwnerRouter().getOwner()))->incrPGCyleSumOfSuqare(((TPZNetwork*)(getOwnerRouter().getOwner()))->TIME_FUL_DISCHARGE * ((TPZNetwork*)(getOwnerRouter().getOwner()))->TIME_FUL_DISCHARGE);
+                  double linearCycle = m_consecutivePG[inPort]-((TPZNetwork*)(getOwnerRouter().getOwner()))->TIME_FUL_DISCHARGE;
+                  if (linearCycle > 0)
+                     ((TPZNetwork*)(getOwnerRouter().getOwner()))->incrPGCyleSum(linearCycle);          
+               }
                m_consecutivePG[inPort] = 0;  // consecutive sleep end here.
                outputInterfaz(outPort)->setPG(true,WU);
             }
@@ -359,7 +368,16 @@ void TPZSimpleRouterFlowBless :: portPowerGate (unsigned time)
             #endif // PGDEBUG
             m_portState[inPort] = WAKEUPRX;
             m_wakeupDelay[inPort]--;
-            ((TPZNetwork*)(getOwnerRouter().getOwner()))->incrPGCyleSumOfSuqare(m_consecutivePG[inPort]*m_consecutivePG[inPort]);
+            if (m_consecutivePG[inPort] < ((TPZNetwork*)(getOwnerRouter().getOwner()))->TIME_FUL_DISCHARGE)
+                  ((TPZNetwork*)(getOwnerRouter().getOwner()))->incrPGCyleSumOfSuqare(m_consecutivePG[inPort]*m_consecutivePG[inPort]);
+            else
+            {
+               ((TPZNetwork*)(getOwnerRouter().getOwner()))->incrPGCyleSumOfSuqare(((TPZNetwork*)(getOwnerRouter().getOwner()))->TIME_FUL_DISCHARGE * ((TPZNetwork*)(getOwnerRouter().getOwner()))->TIME_FUL_DISCHARGE);
+               double linearCycle = m_consecutivePG[inPort]-((TPZNetwork*)(getOwnerRouter().getOwner()))->TIME_FUL_DISCHARGE;
+               if (linearCycle > 0)
+                  ((TPZNetwork*)(getOwnerRouter().getOwner()))->incrPGCyleSum(linearCycle);          
+            }
+            //((TPZNetwork*)(getOwnerRouter().getOwner()))->incrPGCyleSumOfSuqare(m_consecutivePG[inPort]*m_consecutivePG[inPort]);
             m_consecutivePG[inPort] = 0; // consecutive sleep end here.
          }
          else
