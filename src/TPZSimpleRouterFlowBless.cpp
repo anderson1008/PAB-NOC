@@ -161,10 +161,10 @@ void TPZSimpleRouterFlowBless :: initialize()
    m_PGLevel = 1;
    m_portType = new PORTTYPE [m_ports]; // m_portType is outPort indexed.
    EpochPG = 10;
-   thresholdPG = 3;      // threshold for PG the port loadFactorPerPort = 0.3
-   thresholdPGWU = 3;
+   thresholdPG = 4;      // usually, it is an even number.
+   thresholdPGWU = 2;
    thresholdPGLevel2 =  thresholdPG*2;   // threshold for change the PG level of the router loadFactorPerRouter = 0.3
-   thresholdPGLevel3 =  thresholdPG/2;   // loadFactorPerRouter = 0.15
+   thresholdPGLevel3 =  thresholdPG;   // loadFactorPerRouter = 0.15
    WAKEUPDELAY = 2;
    RINGSIZE_PGST1 = 4;
    RINGSIZE_PGST2 = 8;
