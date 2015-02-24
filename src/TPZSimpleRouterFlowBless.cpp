@@ -482,8 +482,13 @@ void TPZSimpleRouterFlowBless :: setPortType (unsigned time)
       unsigned posy=pos.valueForCoordinate(TPZPosition::Y);
       unsigned posz=pos.valueForCoordinate(TPZPosition::Z);
       unsigned pglevel = updatePGLevel ();
-
-      for (unsigned k=0; k<48; ++k)
+      
+      unsigned SizeX= ((TPZNetwork*)getOwnerRouter().getOwner())->getSizeX();
+      unsigned SizeY= ((TPZNetwork*)getOwnerRouter().getOwner())->getSizeY();
+      unsigned SizeZ= ((TPZNetwork*)getOwnerRouter().getOwner())->getSizeZ();
+      
+      
+      for (unsigned k=0; k<SizeX*SizeY*SizeZ*3; ++k)
       {
          if (PGTable->at(k).isCurrentNode(posx,posy,pglevel) == true)
          {
