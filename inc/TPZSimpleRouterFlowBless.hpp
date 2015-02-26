@@ -193,8 +193,9 @@
       TPZMessage** m_pipeReg2;
       unsigned long pktIdGolden;
       Boolean * m_eject;
-      TPZMessage ** m_interFlit;
-      TPZMessage ** m_outFlit; // output of the second stage.
+      TPZMessage ** m_interFlitSt1;
+      TPZMessage ** m_interFlitSt2;
+	 	TPZMessage ** m_outFlit; // output of the second stage.
       unsigned * m_portUtilCount; // port utilization counter;
       unsigned * m_wakeupDelay; // use to emulate the wakeup delay, not an actual hardware.
       PORTSTATE * m_portState;
