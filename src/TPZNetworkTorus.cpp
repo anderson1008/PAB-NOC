@@ -164,8 +164,7 @@ void TPZNetworkTorus :: createPGTable ()
    // All the port characteristic are predefined to form specific topology under different PGLevel.
    if (getSizeX() == 4 && getSizeY() == 4 && getSizeZ() == 1)
    {
-      PGVector.push_back(PGNode(0,0,1,_PERMANENT_,_PERMANENT_,_PERMANENT_,_PERMANENT_)); 
-		//PGVector.push_back(PGNode(0,0,1,_PERMANENT_,_NONPERMANENT_,_PERMANENT_,_NONPERMANENT_));
+      PGVector.push_back(PGNode(0,0,1,_PERMANENT_,_NONPERMANENT_,_PERMANENT_,_NONPERMANENT_));
       PGVector.push_back(PGNode(0,0,2,_PERMANENT_,_NONPERMANENT_,_PERMANENT_,_NONPERMANENT_));
       PGVector.push_back(PGNode(0,0,3,_PERMANENT_,_NONPERMANENT_,_PERMANENT_,_NONPERMANENT_));
 
@@ -176,9 +175,8 @@ void TPZNetworkTorus :: createPGTable ()
       PGVector.push_back(PGNode(2,0,1,_PERMANENT_,_NONPERMANENT_,_PERMANENT_,_NONPERMANENT_));
       PGVector.push_back(PGNode(2,0,2,_PERMANENT_,_NONPERMANENT_,_PERMANENT_,_NONPERMANENT_));
       PGVector.push_back(PGNode(2,0,3,_PERMANENT_,_NONPERMANENT_,_PERMANENT_,_NONPERMANENT_));
-		
-		PGVector.push_back(PGNode(3,0,1,_PERMANENT_,_PERMANENT_,_PERMANENT_,_PERMANENT_));
-      //PGVector.push_back(PGNode(3,0,1,_NONPERMANENT_,_PERMANENT_,_PERMANENT_,_NONPERMANENT_));
+
+      PGVector.push_back(PGNode(3,0,1,_NONPERMANENT_,_PERMANENT_,_PERMANENT_,_NONPERMANENT_));
       PGVector.push_back(PGNode(3,0,2,_NONPERMANENT_,_PERMANENT_,_PERMANENT_,_NONPERMANENT_));
       PGVector.push_back(PGNode(3,0,3,_NONPERMANENT_,_PERMANENT_,_PERMANENT_,_NONPERMANENT_));
 
@@ -214,8 +212,7 @@ void TPZNetworkTorus :: createPGTable ()
       PGVector.push_back(PGNode(3,2,2,_NONPERMANENT_,_NONPERMANENT_,_PERMANENT_,_PERMANENT_));
       PGVector.push_back(PGNode(3,2,3,_NONPERMANENT_,_NONPERMANENT_,_PERMANENT_,_PERMANENT_));
 
-  		PGVector.push_back(PGNode(0,3,1,_PERMANENT_,_PERMANENT_,_PERMANENT_,_PERMANENT_));
-	   //PGVector.push_back(PGNode(0,3,1,_PERMANENT_,_NONPERMANENT_,_NONPERMANENT_,_PERMANENT_));
+      PGVector.push_back(PGNode(0,3,1,_PERMANENT_,_NONPERMANENT_,_NONPERMANENT_,_PERMANENT_));
       PGVector.push_back(PGNode(0,3,2,_PERMANENT_,_NONPERMANENT_,_NONPERMANENT_,_PERMANENT_));
       PGVector.push_back(PGNode(0,3,3,_PERMANENT_,_NONPERMANENT_,_NONPERMANENT_,_PERMANENT_));
 
@@ -227,8 +224,7 @@ void TPZNetworkTorus :: createPGTable ()
       PGVector.push_back(PGNode(2,3,2,_PERMANENT_,_NONPERMANENT_,_NONPERMANENT_,_PERMANENT_));
       PGVector.push_back(PGNode(2,3,3,_PERMANENT_,_PERMANENT_,_NONPERMANENT_,_NONPERMANENT_));
 
-      PGVector.push_back(PGNode(3,3,1,_PERMANENT_,_PERMANENT_,_PERMANENT_,_PERMANENT_));
-		//PGVector.push_back(PGNode(3,3,1,_NONPERMANENT_,_PERMANENT_,_NONPERMANENT_,_PERMANENT_));
+      PGVector.push_back(PGNode(3,3,1,_NONPERMANENT_,_PERMANENT_,_NONPERMANENT_,_PERMANENT_));
       PGVector.push_back(PGNode(3,3,2,_NONPERMANENT_,_PERMANENT_,_NONPERMANENT_,_PERMANENT_));
       PGVector.push_back(PGNode(3,3,3,_NONPERMANENT_,_PERMANENT_,_NONPERMANENT_,_PERMANENT_));   
    }
