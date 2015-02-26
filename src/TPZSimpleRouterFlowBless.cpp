@@ -151,7 +151,8 @@ void TPZSimpleRouterFlowBless :: initialize()
    m_portState = new PORTSTATE [m_ports+1];
    m_connEstablished=new Boolean[m_ports+1];
    pktIdGolden = 1;
-   m_interFlit = new TPZMessage * [m_ports];
+   m_interFlitSt1 = new TPZMessage * [m_ports];
+   m_interFlitSt2 = new TPZMessage * [m_ports];
    m_outFlit = new TPZMessage * [m_ports];
    m_portUtilCount = new unsigned [m_ports]; // the number of counters can be reduced in later implementation.
    m_wakeupDelay = new unsigned [m_ports]; // the number of counters can be reduced in later implementation.
@@ -204,8 +205,9 @@ void TPZSimpleRouterFlowBless :: initialize()
       m_eject[i] = false;
       m_pipeReg1[i] = 0;
  //     m_pipeReg2[i] = 0;
-      m_interFlit[i] = 0;
-      m_outFlit[i] = 0;
+      m_interFlitSt1[i] = 0;
+      m_interFlitSt2[i] = 0;
+	   m_outFlit[i] = 0;
       m_portType[i] = _PERMANENT_;
    }
 
@@ -230,7 +232,7 @@ void TPZSimpleRouterFlowBless :: terminate()
 //   delete[] m_pipeReg2;
    delete[] m_eject;
    delete[] m_portState;
-   delete[] m_interFlit;
+   delete[] m_interFlitSt1;
    delete[] m_outFlit;
    delete[] m_portUtilCount;
    delete[] m_wakeupDelay;
@@ -476,7 +478,19 @@ void TPZSimpleRouterFlowBless :: setPortType (unsigned time)
 
    if ((time - 1) % EpochPG == 0)
    {
-      PGTable = ((TPZNetworkTorus*)getOwnerRouter().getOwner())->getPGTable();
+		unsigned routerLoad;
+		routerLoad = getRouterLoad();
+		if (routerLoad >= thresholdPG)
+		{
+			  m_portType[_Xplus_] = _PERMANENT_;
+  		     m_portType[_Xminus_] =_PERMANENT_;
+       	  m_portType[_Yplus_] = _PERMANENT_;
+ 		     m_portType[_Yminus_] =_PERMANENT_;
+			  return;
+		}    
+
+
+		PGTable = ((TPZNetworkTorus*)getOwnerRouter().getOwner())->getPGTable();
       TPZPosition pos= getOwnerRouter().getPosition();
       unsigned posx=pos.valueForCoordinate(TPZPosition::X);
       unsigned posy=pos.valueForCoordinate(TPZPosition::Y);
@@ -538,64 +552,116 @@ Boolean TPZSimpleRouterFlowBless :: inputReading()
    //silverCheck(time);
    //updateHistory(time);
 
-   bool swapEnable [4] = {};
+   bool swapEnable [6] = {};
    cleanOutputInterfaces();
+	
+	if (m_portState[4] == INACTIVE) // north port is disabled.
+  		swapEnable[0] = false;
+	else
+		swapEnable[0] = permuterBlock (m_pipeReg1[4], m_pipeReg1[2], 1, 1);
+   
 
-   swapEnable[0] = permuterBlock (m_pipeReg1[4], m_pipeReg1[2], 1, 1);
-   swapEnable[1] = permuterBlock (m_pipeReg1[3], m_pipeReg1[1], 1, 2);
-   if (swapEnable[0]==true)
+	if (m_portState[1] == INACTIVE) // west port is disabled.
+		swapEnable[1] = false;
+	else
+		swapEnable[1] = permuterBlock (m_pipeReg1[3], m_pipeReg1[1], 1, 2);
+   
+	if (swapEnable[0]==true)
    {
-      m_interFlit[1] = m_pipeReg1[2];
-      m_interFlit[2] = m_pipeReg1[4];
+      m_interFlitSt1[1] = m_pipeReg1[2];
+      m_interFlitSt1[2] = m_pipeReg1[4];
    }
    else
    {
-      m_interFlit[1] = m_pipeReg1[4];
-      m_interFlit[2] = m_pipeReg1[2];
+      m_interFlitSt1[1] = m_pipeReg1[4];
+      m_interFlitSt1[2] = m_pipeReg1[2];
    }
    if (swapEnable[1]==true)
    {
-      m_interFlit[3] = m_pipeReg1[1];
-      m_interFlit[4] = m_pipeReg1[3];
+      m_interFlitSt1[3] = m_pipeReg1[1];
+      m_interFlitSt1[4] = m_pipeReg1[3];
    }
    else
    {
-      m_interFlit[3] = m_pipeReg1[3];
-      m_interFlit[4] = m_pipeReg1[1];
+      m_interFlitSt1[3] = m_pipeReg1[3];
+      m_interFlitSt1[4] = m_pipeReg1[1];
    }
-//   swapFlit (m_pipeReg1[0],m_pipeReg1[1],&(m_interFlit[0]),&(m_interFlit[1]),swapEnable[0]);
-//   swapFlit (m_pipeReg1[2],m_pipeReg1[3],&m_interFlit[2],&m_interFlit[3],swapEnable[1]);
+//   swapFlit (m_pipeReg1[0],m_pipeReg1[1],&(m_interFlitSt1[0]),&(m_interFlitSt1[1]),swapEnable[0]);
+//   swapFlit (m_pipeReg1[2],m_pipeReg1[3],&m_interFlitSt1[2],&m_interFlitSt1[3],swapEnable[1]);
    for (inPort=1; inPort<m_ports; inPort++)
       m_pipeReg1[inPort] = 0;
 
-   swapEnable[2] = permuterBlock (m_interFlit[1], m_interFlit[3], 2, 1);
-   swapEnable[3] = permuterBlock (m_interFlit[2], m_interFlit[4], 2, 2);
-//   swapFlit (m_interFlit[0],m_interFlit[2],m_outFlit[0],m_outFlit[1],swapEnable[2]);
-//   swapFlit (m_interFlit[1],m_interFlit[3],m_outFlit[2],m_outFlit[3],swapEnable[3]);
-   if (swapEnable[2]==true)
+	if (m_portState[4] == INACTIVE) // north port is disabled. 
+   	swapEnable[2] = false;
+	else	
+		swapEnable[2] = permuterBlock (m_interFlitSt1[1], m_interFlitSt1[3], 2, 1);
+  	
+	if (m_portState[1] == INACTIVE) // north port is disabled.
+ 		swapEnable[3] = false;
+	else
+		swapEnable[3] = permuterBlock (m_interFlitSt1[2], m_interFlitSt1[4], 2, 2);
+
+//   swapFlit (m_interFlitSt1[0],m_interFlitSt1[2],m_outFlit[0],m_outFlit[1],swapEnable[2]);
+//   swapFlit (m_interFlitSt1[1],m_interFlitSt1[3],m_outFlit[2],m_outFlit[3],swapEnable[3]);
+
+	if (swapEnable[2]==true)
    {
-      m_outFlit[1] = m_interFlit[3];
-      m_outFlit[2] = m_interFlit[1];
+      m_interFlitSt2[1] = m_interFlitSt1[3];
+      m_interFlitSt2[2] = m_interFlitSt1[1];
    }
    else
    {
-      m_outFlit[1] = m_interFlit[1];
-      m_outFlit[2] = m_interFlit[3];
+      m_interFlitSt2[1] = m_interFlitSt1[1];
+      m_interFlitSt2[2] = m_interFlitSt1[3];
    }
    if (swapEnable[3]==true)
    {
-      m_outFlit[3] = m_interFlit[4];
-      m_outFlit[4] = m_interFlit[2];
+      m_interFlitSt2[3] = m_interFlitSt1[4];
+      m_interFlitSt2[4] = m_interFlitSt1[2];
    }
    else
    {
-      m_outFlit[3] = m_interFlit[2];
-      m_outFlit[4] = m_interFlit[4];
+      m_interFlitSt2[3] = m_interFlitSt1[2];
+      m_interFlitSt2[4] = m_interFlitSt1[4];
    }
 
    for (inPort=1; inPort<m_ports; inPort++)
-      m_interFlit[inPort] = 0;
+      m_interFlitSt1[inPort] = 0;
+	
+	if (m_portState[4] == INACTIVE) // north port is disabled.
+ 		swapEnable[4] = false;
+	else
+		swapEnable[4] = permuterBlock (m_interFlitSt2[1], m_interFlitSt2[3], 3, 1);
+   
+	if (m_portState[1] == INACTIVE) // west port is disabled.
+		swapEnable[5] = false;
+	else			
+		swapEnable[5] = permuterBlock (m_interFlitSt2[2], m_interFlitSt2[4], 3, 2);
+	
+	if (swapEnable[4]==true)
+   {
+      m_outFlit[1] = m_interFlitSt2[3];
+      m_outFlit[2] = m_interFlitSt2[1];
+   }
+   else
+   {
+      m_outFlit[1] = m_interFlitSt2[1];
+      m_outFlit[2] = m_interFlitSt2[3];
+   }
+   if (swapEnable[5]==true)
+   {
+      m_outFlit[3] = m_interFlitSt2[4];
+      m_outFlit[4] = m_interFlitSt2[2];
+   }
+   else
+   {
+      m_outFlit[3] = m_interFlitSt2[2];
+      m_outFlit[4] = m_interFlitSt2[4];
+   }
 
+   for (inPort=1; inPort<m_ports; inPort++)
+      m_interFlitSt2[inPort] = 0;
+	
    for (outPort=1; outPort<m_ports; outPort++)
    {
       if (m_outFlit[outPort])
@@ -671,23 +737,24 @@ Boolean TPZSimpleRouterFlowBless :: inputReading()
          m_portUtilCount [inPort] ++;
          routeComputation(m_sync[inPort]);
 
-         //bool portFind1 = false;
+         bool portFind1 = false;
          for (outPort = 1; outPort <= m_ports; outPort++)
          {
             if(getDeltaAbs(m_sync [inPort], outPort)==true)
             {
                
                /// Section: setRoutingPort
-               m_sync [inPort]->setRoutingPort((TPZROUTINGTYPE) outPort);
+              	
+					m_sync [inPort]->setRoutingPort((TPZROUTINGTYPE) outPort);
                /// if the desired outPort is INACTIVE, increment the counter to indicate a deflection event.
                if (m_portState[indexMapping(outPort)] == INACTIVE)
                   m_portUtilCount [indexMapping(outPort)] ++;
                break;
-               
+              
                // replace the above setRoutingPort section with the following to
                // set productive port in Y dimension as routing port when the productive port in X dimension
                // is not available.
-               /*
+               /* 
                /// if the desired outPort is INACTIVE, increment the counter to indicate a deflection event.
                if (m_portState[indexMapping(outPort)] != ACTIVE)
                {
@@ -786,18 +853,20 @@ Boolean TPZSimpleRouterFlowBless :: inputReading()
 
             routeComputation(m_pipeReg1[inPort]);
             //m_portUtilCount[inPort] ++;
-            //bool portFind = false;
+            bool portFind = false;
             for (outPort = 1; outPort < m_ports; outPort++) // no need to check local outPort
             {
                if(getDeltaAbs(m_pipeReg1[inPort], outPort)==true)
                {
                   /// Section: setRoutingPort
-                  m_pipeReg1 [inPort]->setRoutingPort((TPZROUTINGTYPE) outPort);
+                 	
+						m_pipeReg1 [inPort]->setRoutingPort((TPZROUTINGTYPE) outPort);
                   /// if the desired outPort is INACTIVE, increment the counter to indicate a deflection event.
                   if (m_portState[indexMapping(outPort)] == INACTIVE)
                      m_portUtilCount [indexMapping(outPort)] ++;
                   break;
-                  
+                 
+
                   // replace the above setRoutingPort section with the following to
                   // set productive port in Y dimension as routing port when the productive port in X dimension
                   // is not available.
@@ -820,15 +889,15 @@ Boolean TPZSimpleRouterFlowBless :: inputReading()
                      #endif // DEBUG
                      break;
                   }
-                  */
-
+                 
+						*/
                }
             }
             // Has to enable this to assign port in Y dimension as productive port when X dimension is not available.
             /*
             if (portFind == false)
                m_pipeReg1 [inPort]->setRoutingPort((TPZROUTINGTYPE) (rand() % 4 + 1));
-            */
+           	*/
             if (goldenCheck (m_pipeReg1[inPort]->getIdentifier()) == true)
             {
                m_pipeReg1[inPort]->setGolden();
@@ -1021,7 +1090,7 @@ unsigned TPZSimpleRouterFlowBless :: steering (TPZROUTINGTYPE desiredDirection, 
 {
    unsigned desiredPort = 0; // desired outPort in each permuter block.
 
-   if (stage == 1)
+   if (stage == 1 || stage == 2)
    {
       // steering function for stage 1
       if (desiredDirection == _Yplus_ || desiredDirection == _Yminus_)
@@ -1029,7 +1098,7 @@ unsigned TPZSimpleRouterFlowBless :: steering (TPZROUTINGTYPE desiredDirection, 
       else if (desiredDirection == _Xplus_ || desiredDirection == _Xminus_)
          desiredPort = 1;
    }
-   else if (stage == 2)
+   else if (stage == 3)
    {
       // steering function for stage 2
       if (desiredDirection == _Yplus_ || desiredDirection == _Xplus_)
@@ -1140,93 +1209,93 @@ bool TPZSimpleRouterFlowBless :: permuterBlock (TPZMessage * msg0, TPZMessage * 
 
 
    // swap[i] = 1 if any one of the associated inPort or outPort is power-gated.
-   if (stage == 1 && pos == 1)
-   {
-      if (m_portState[4] == INACTIVE || m_portState[2] == INACTIVE)
-         return false;
+//   if (stage == 1 && pos == 1)
+//   {
+//      if (m_portState[4] == INACTIVE || m_portState[2] == INACTIVE)
+//         return false;
       /*else if (m_portState[1] == INACTIVE || m_portState[3] == INACTIVE)
          if (msg0!=0 && msg1!=0)
             return true;*/
-   }
-   else if (stage == 1 && pos == 2)
-   {
-      if (m_portState[3] == INACTIVE || m_portState[1] == INACTIVE)
-         return false;
+//   }
+//   else if (stage == 1 && pos == 2)
+//   {
+//      if (m_portState[3] == INACTIVE || m_portState[1] == INACTIVE)
+//         return false;
       /*else if (m_portState[2] == INACTIVE || m_portState[4] == INACTIVE)
          if (msg0!=0 && msg1!=0)
             return true; */
-   }
-   else if (stage == 2 && pos == 1)
-   {
-      if (m_portState[4] == INACTIVE || m_portState[3] == INACTIVE)
-         return false;
+//   }
+//   else if (stage == 2 && pos == 1)
+//   {
+//      if (m_portState[4] == INACTIVE || m_portState[3] == INACTIVE)
+//         return false;
       /// U-turn Prevention
-      if (msg0 != 0 && msg1!=0)
-      {
-         if (msg0->getRoutingPort() != _Yplus_ && msg0->getRoutingPort() != _Yminus_ &&\
+//      if (msg0 != 0 && msg1!=0)
+//      {
+//         if (msg0->getRoutingPort() != _Yplus_ && msg0->getRoutingPort() != _Yminus_ &&\
           msg1->getRoutingPort() != _Yplus_ && msg1->getRoutingPort() != _Yminus_)
-          {
-            if (msg0->getInputInterfaz() == 4 || msg1->getInputInterfaz() == 3)
-            return true;
-         }
-      }
-      else if (msg0 != 0)
-      {
-         if (msg0->getRoutingPort() != _Yplus_ && msg0->getRoutingPort() != _Yminus_)
-          {
-            if (msg0->getInputInterfaz() == 4)
-            return true;
-         }
-      }
-      else if (msg1 != 0)
-      {
-         if (msg1->getRoutingPort() != _Yplus_ && msg1->getRoutingPort() != _Yminus_)
-          {
-            if (msg1->getInputInterfaz() == 3)
-            return true;
-         }
-      }
+//          {
+//            if (msg0->getInputInterfaz() == 4 || msg1->getInputInterfaz() == 3)
+//           return true;
+//        }
+//      }
+//      else if (msg0 != 0)
+//      {
+//         if (msg0->getRoutingPort() != _Yplus_ && msg0->getRoutingPort() != _Yminus_)
+//          {
+//            if (msg0->getInputInterfaz() == 4)
+//            return true;
+//         }
+//      }
+//      else if (msg1 != 0)
+//      {
+//         if (msg1->getRoutingPort() != _Yplus_ && msg1->getRoutingPort() != _Yminus_)
+//          {
+//            if (msg1->getInputInterfaz() == 3)
+//            return true;
+//         }
+//      }
       // end U-turn Prevention
       /*else if (m_portState[1] == INACTIVE || m_portState[2] == INACTIVE)
          if (msg0!=0 && msg1!=0)
             return true;*/
-   }
-   else if (stage == 2 && pos == 2)
-   {
-      if (m_portState[2] == INACTIVE || m_portState[1] == INACTIVE)
-         return false;
+//   }
+//   else if (stage == 2 && pos == 2)
+//   {
+//      if (m_portState[2] == INACTIVE || m_portState[1] == INACTIVE)
+//         return false;
       
       /// U-turn Prevention
-      if (msg0 != 0 && msg1!=0)
-      {
-         if (msg0->getRoutingPort() != _Xplus_ && msg0->getRoutingPort() != _Xminus_ && \
+//      if (msg0 != 0 && msg1!=0)
+//      {
+//         if (msg0->getRoutingPort() != _Xplus_ && msg0->getRoutingPort() != _Xminus_ && \
           msg1->getRoutingPort() != _Xplus_ && msg1->getRoutingPort() != _Xminus_)
-          {
-            if (msg0->getInputInterfaz() == 2 || msg1->getInputInterfaz() == 1)
-            return true;
-         }
-      }
-      else if (msg0 != 0)
-      {
-         if (msg0->getRoutingPort() != _Xplus_ && msg0->getRoutingPort() != _Xminus_)
-          {
-            if (msg0->getInputInterfaz() == 2)
-            return true;
-         }
-      }
-      else if (msg1 != 0)
-      {
-         if (msg1->getRoutingPort() != _Xplus_ && msg1->getRoutingPort() != _Xminus_)
-          {
-            if (msg1->getInputInterfaz() == 1)
-            return true;
-         }
-      }
+//          {
+//            if (msg0->getInputInterfaz() == 2 || msg1->getInputInterfaz() == 1)
+//            return true;
+//         }
+//      }
+//      else if (msg0 != 0)
+//      {
+//         if (msg0->getRoutingPort() != _Xplus_ && msg0->getRoutingPort() != _Xminus_)
+//          {
+//            if (msg0->getInputInterfaz() == 2)
+//            return true;
+//         }
+//      }
+//      else if (msg1 != 0)
+//      {
+//         if (msg1->getRoutingPort() != _Xplus_ && msg1->getRoutingPort() != _Xminus_)
+//          {
+//            if (msg1->getInputInterfaz() == 1)
+//            return true;
+//         }
+//      }
       // end U-turn Prevention
       /*else if (m_portState[4] == INACTIVE || m_portState[3] == INACTIVE)
          if (msg0!=0 && msg1!=0)
             return true;*/
-   }
+//   }
 
 
    if (winner (msg0,msg1) == msg0)
