@@ -164,6 +164,7 @@ void TPZNetworkTorus :: createPGTable ()
    // All the port characteristic are predefined to form specific topology under different PGLevel.
    if (getSizeX() == 4 && getSizeY() == 4 && getSizeZ() == 1)
    {
+
       PGVector.push_back(PGNode(0,0,1,_PERMANENT_,_NONPERMANENT_,_PERMANENT_,_NONPERMANENT_));
       PGVector.push_back(PGNode(0,0,2,_PERMANENT_,_NONPERMANENT_,_PERMANENT_,_NONPERMANENT_));
       PGVector.push_back(PGNode(0,0,3,_PERMANENT_,_NONPERMANENT_,_PERMANENT_,_NONPERMANENT_));

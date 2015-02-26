@@ -476,7 +476,19 @@ void TPZSimpleRouterFlowBless :: setPortType (unsigned time)
 
    if ((time - 1) % EpochPG == 0)
    {
-      PGTable = ((TPZNetworkTorus*)getOwnerRouter().getOwner())->getPGTable();
+		unsigned routerLoad;
+		routerLoad = getRouterLoad();
+		if (routerLoad >= thresholdPG)	
+      { 
+			m_portType[_Xplus_] = _PERMANENT_;
+      	m_portType[_Xminus_] = _PERMANENT_;
+      	m_portType[_Yplus_] = _PERMANENT_;
+      	m_portType[_Yminus_] = _PERMANENT_;
+			return;
+		} 
+	   
+
+		PGTable = ((TPZNetworkTorus*)getOwnerRouter().getOwner())->getPGTable();
       TPZPosition pos= getOwnerRouter().getPosition();
       unsigned posx=pos.valueForCoordinate(TPZPosition::X);
       unsigned posy=pos.valueForCoordinate(TPZPosition::Y);
@@ -495,9 +507,9 @@ void TPZSimpleRouterFlowBless :: setPortType (unsigned time)
             pgnode = &(PGTable->at(k));
             //cout << "This is Node # " << k << endl;
             break;
-         }
-
-      }
+         }   
+		}
+		
       /*
       cout << "Router ";
       cout << "(" << pgnode->getPosX() << ", " << pgnode->getPosY() << ") is in PGLevel = " << pgnode->getPGLevel() << "    ";
